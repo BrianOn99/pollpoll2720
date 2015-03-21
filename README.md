@@ -6,8 +6,9 @@ A php/mariadb/html5 website support polling
 
 ## CREDITS
 Some 3rd party libraries are used:
-* The PHP Login Project
-* Twitter bootstrap
+* The PHP Login Project -- handling login/logout
+* MeekroDB -- prevent sql injection and neat code
+* Twitter bootstrap -- frontend ui design
 
 ## Installation
 
@@ -22,11 +23,13 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 
 ### manager
 - [X] login/logout
-- [ ] add event
+- [lib only] add event
 - [ ] list event
-- [ ] edit event
-- [ ] delete event
+- [lib only] delete event
 - [ ] activates event
+- [ ] edit voters
+- [ ] export voters
+- [ ] import voters
 
 ### voter
 - [ ] list active event
