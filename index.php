@@ -36,7 +36,6 @@ $login = new Login();
 <?php include "_include/head.php"; ?>
 <body>
 <div class="container">
-<h1>Login</h1>
 
 <?php
 // ... ask if we are logged in here:

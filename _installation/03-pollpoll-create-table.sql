@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`poll_event` (
   `end_time` timestamp NOT NULL,
   PRIMARY KEY (`event_id`),
   CONSTRAINT `fk_user_id`
-    FOREIGN KEY (user_id) REFERENCES `login`.`users` (user_id)
+    FOREIGN KEY (user_id) REFERENCES `pollpoll`.`users` (user_id)
     ON UPDATE RESTRICT
     ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci COMMENT='poll event data';

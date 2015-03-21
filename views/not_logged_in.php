@@ -14,6 +14,8 @@ if (isset($login)) {
 }
 ?>
 
+<h1>Login</h1>
+
 <!-- login form box -->
 <form method="post" action="index.php" name="loginform">
 
