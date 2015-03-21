@@ -52,7 +52,7 @@ class Event_manager extends Event_base
             'event_type' => $type,
             'start_time' => $start_t,
             'end_time' => $end_t));
-        return DB::query("SELECT LAST_INSERT_ID()");
+        return new Event_manager($name, DB::queryFirstField("SELECT LAST_INSERT_ID()"));
     }
 
 
@@ -61,12 +61,17 @@ class Event_manager extends Event_base
         DB::delete('poll_event', 'event_id=%d', $this->e_id);
     }
 
+    function info()
+    {
+            return DB::queryFirstRow("SELECT title, description, event_type, start_time, end_time"
+                   . " FROM poll_event WHERE event_id=%d", $this->e_id);
+    }
+
     function is_active() {}
     function activate() {}
     protected function send_email() {}
     function get_voters() {}
     function update_voters() {}
-    function info() {}
 }
 
 class Event_voter extends Event_base
