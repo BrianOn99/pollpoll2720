@@ -10,6 +10,36 @@ function get_events()
     return DB::query('SELECT * FROM poll_event');
 }
 
+class User
+{
+        protected $u_id;
+
+        static function name2id($name)
+        {
+                $row = DB::queryFirstRow("SELECT user_id, user_name FROM users WHERE user_name = 'ham'");
+                $uid = $row['user_id'];
+                echo "id: " . $row['user_id'] . "\n";
+                echo "name: " . $row['user_name'] . "\n";
+                echo "-------------\n";
+                return $uid;
+        }
+
+        function __construct($u_id)
+        {
+                $this->u_id = $u_id;
+        }
+
+        function get_eventobj($e_id)
+        {
+                return new Event_manager($this->u_id, $e_id);
+        }
+
+        function list_events()
+        {
+                return DB::query("SELECT * FROM poll_event WHERE user_id=%d", $this->u_id);
+        }
+}
+
 class Event_base
 {
     protected $e_id;  // event id
@@ -34,21 +64,12 @@ class Event_base
 /* it is read as event object for manager, not event manager */
 class Event_manager extends Event_base
 {
-    protected $user_id;
-    protected function name2id($name)
-    {
-        $row = DB::queryFirstRow("SELECT user_id, user_name FROM users WHERE user_name = 'ham'");
-        $uid = $row['user_id'];
-        echo "id: " . $row['user_id'] . "\n";
-        echo "name: " . $row['user_name'] . "\n";
-        echo "-------------\n";
-        return $uid;
-    }
+    protected $u_id;
 
-    function __construct($user_name, $e_id)
+    function __construct($u_id, $e_id)
     {
         parent::__construct($e_id);
-        $this->user_id = self::name2id($user_name);;
+        $this->user_id = $u_id;
     }
 
     /* the passed time should be unix timestamp */
