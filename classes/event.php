@@ -12,11 +12,20 @@ function get_events()
 
 class Event_base
 {
-    protected $id;  // event id
+    protected $e_id;  // event id
 
     function __construct($e_id)
     {
         $this->e_id = $e_id;
+    }
+
+    function info()
+    {
+            return DB::queryFirstRow("SELECT title, description, event_type,"
+                    . "UNIX_TIMESTAMP(start_time) start_time,"
+                    . "UNIX_TIMESTAMP(end_time) end_time"
+                    . " FROM poll_event WHERE event_id=%d", 
+                    $this->e_id);
     }
 
     function get_result() {}
@@ -42,6 +51,7 @@ class Event_manager extends Event_base
         $this->user_id = self::name2id($user_name);;
     }
 
+    /* the passed time should be unix timestamp */
     public static function create($name, $title, $desc, $type, $start_t, $end_t)
     {
         echo $name, ' ', $type, ' ', $start_t;
@@ -50,8 +60,8 @@ class Event_manager extends Event_base
             'title' => $title,
             'description' => $desc,
             'event_type' => $type,
-            'start_time' => $start_t,
-            'end_time' => $end_t));
+            'start_time' => date('Y-m-d H:i:s', $start_t),
+            'end_time' => date('Y-m-d H:i:s', $end_t)));
         return new Event_manager($name, DB::queryFirstField("SELECT LAST_INSERT_ID()"));
     }
 
@@ -59,12 +69,6 @@ class Event_manager extends Event_base
     function remove()
     {
         DB::delete('poll_event', 'event_id=%d', $this->e_id);
-    }
-
-    function info()
-    {
-            return DB::queryFirstRow("SELECT title, description, event_type, start_time, end_time"
-                   . " FROM poll_event WHERE event_id=%d", $this->e_id);
     }
 
     function is_active() {}
