@@ -1,6 +1,6 @@
 <?php
-require_once("../config/db.php");
-require_once 'meekrodb.2.3.class.php';
+require_once "meekrodb.2.3.class.php";
+require_once "../config/db.php";
 DB::$user = DB_USER;
 DB::$password = DB_PASS;
 DB::$dbName = DB_NAME;
@@ -23,9 +23,6 @@ class User
                         throw new Exception("no user name $u_id");
                 }
                 $uid = $row['user_id'];
-                echo "id: " . $row['user_id'] . "\n";
-                echo "name: " . $row['user_name'] . "\n";
-                echo "-------------\n";
                 return $uid;
         }
 
