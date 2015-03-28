@@ -16,7 +16,12 @@ class User
 
         static function name2id($name)
         {
-                $row = DB::queryFirstRow("SELECT user_id, user_name FROM users WHERE user_name = 'ham'");
+                $row = DB::queryFirstRow("SELECT user_id, user_name "
+                                           . "FROM users WHERE user_name = %s",
+                                           $name);
+                if ($row == NULL) {
+                        throw new Exception("no user name $u_id");
+                }
                 $uid = $row['user_id'];
                 echo "id: " . $row['user_id'] . "\n";
                 echo "name: " . $row['user_name'] . "\n";
@@ -26,6 +31,12 @@ class User
 
         function __construct($u_id)
         {
+                $row = DB::queryFirstRow("SELECT 1 "
+                                           . "FROM users WHERE user_id = %d",
+                                           $u_id);
+                if ($row == NULL) {
+                        throw new Exception("no user id $u_id");
+                }
                 $this->u_id = $u_id;
         }
 
