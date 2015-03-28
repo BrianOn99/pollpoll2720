@@ -34,7 +34,7 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="add">
-        <form class="form-horizontal">
+        <form class="form-horizontal" id="addEventForm">
             <div class="form-group">
                 <label for="event-title" class="col-sm-2 control-label">Title</label>
                 <div class="col-sm-10">
@@ -45,6 +45,12 @@
                 <label for="event-desc" class="col-sm-2 control-label">Description</label>
                 <div class="col-sm-10">
                     <input id="event-desc" class="form-control" type="text" name="desc" required />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="event-type" class="col-sm-2 control-label">Start Time</label>
+                <div class="col-sm-10">
+                    <input id="event-type" class="form-control" type="text" name="type" required />
                 </div>
             </div>
             <div class="form-group">
@@ -100,4 +106,16 @@ function loadEvents() {
     });
 }
 loadEvents();
+
+$("#addEventForm").submit(function() {
+    $.ajax({
+        type: "POST",
+        url: ajax/add_event.php,
+        data: $("#addEventForm").serialize(),
+        success: function(data) {
+                alert(data);
+        }
+    });
+    return false;
+});
 </script>
