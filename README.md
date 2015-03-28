@@ -24,7 +24,8 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 ### manager
 - [X] login/logout
 - [lib only] add event
-- [ ] list event
+- [X] list event
+- [ ] sort event
 - [lib only] delete event
 - [ ] activates event
 - [ ] edit voters
@@ -32,8 +33,9 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [ ] import voters
 
 ### voter
-- [ ] list active event
+- [ ] view options
 - [ ] vote
+- [ ] view result
 
 ## License
 
