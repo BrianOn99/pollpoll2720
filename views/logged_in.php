@@ -48,24 +48,37 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="event-type" class="col-sm-2 control-label">Start Time</label>
+                <label for="event-type" class="col-sm-2 control-label">Type</label>
                 <div class="col-sm-10">
                     <input id="event-type" class="form-control" type="text" name="type" required />
                 </div>
             </div>
+
             <div class="form-group">
                 <label for="event-start" class="col-sm-2 control-label">Start Time</label>
-                <div class="col-sm-10">
-                    <input id="event-start" class="form-control" type="text" name="start" required />
+                <div class='input-group date col-sm-10'>
+                    <input id="event-start" type='text' class="form-control" name="start" required />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
             </div>
             <div class="form-group">
                 <label for="event-end" class="col-sm-2 control-label">End Time</label>
-                <div class="col-sm-10">
-                    <input id="event-end" class="form-control" type="text" name="end" required />
+                <div class='input-group date col-sm-10'>
+                    <input id="event-end" type='text' class="form-control" name="end" required />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
                 </div>
             </div>
-            <input type="submit"  name="login" value="Log in" />
+        <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker();
+            });
+        </script>
+
+            <input type="submit"  name="submit" value="Submit" />
         </form>
     </div>
 
@@ -108,9 +121,10 @@ function loadEvents() {
 loadEvents();
 
 $("#addEventForm").submit(function() {
+    alert("submit");
     $.ajax({
         type: "POST",
-        url: ajax/add_event.php,
+        url: "ajax/add_event.php",
         data: $("#addEventForm").serialize(),
         success: function(data) {
                 alert(data);
@@ -119,3 +133,6 @@ $("#addEventForm").submit(function() {
     return false;
 });
 </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />

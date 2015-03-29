@@ -23,7 +23,7 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 
 ### manager
 - [X] login/logout
-- [lib only] add event
+- [X] add event
 - [X] list event
 - [ ] sort event
 - [lib only] delete event
@@ -36,6 +36,10 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [ ] view options
 - [ ] vote
 - [ ] view result
+
+## Bug 蟲蟲
+- event time set to zero (need to convert to mysql syntax)
+- many security problems (I will concentrateon features for now)
 
 ## License
 
