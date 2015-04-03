@@ -13,6 +13,11 @@
   <!-- Tab panes -->
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="list">
+      <div class='hidden'>
+        <textarea class="form-control" id="voter"></textarea>
+      </div>
+
+      <button id="testbtn">test</button>
       <table class="table table-striped" id="etable">
         <thead>
           <tr>
@@ -20,6 +25,7 @@
             <th>Description</th>
             <th>Start</th>
             <th>End</th>
+            <th>voters</th>
           </tr>
         </thead>
         <tbody>
@@ -28,6 +34,7 @@
           <td>desc</td>
           <td>1-1-1</td>
           <td>6-6-6</td>
+          <td>edit</td>
         </tr>
         </tbody>
       </table>
@@ -92,7 +99,12 @@
 
   </div>
 </div>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.colorbox/1.4.33/jquery.colorbox.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
 <script>
 /* copied form stackoverflow by fearphage for readable tring formatting */
 if (!String.prototype.format) {
@@ -128,8 +140,11 @@ function loadEvents() {
         console.log(eventList);
         var tbody = $("#etable");
         eventList.forEach(function(e) {
-            var newrow = "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>".format(
-                e.title, e.description, e.start_time, e.end_time);
+                var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
+                             '<td><button type="button" class="btn btn-default btn-sm voter-edit">' +
+                             '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
+                             '</button></td></tr>').format(
+                             e.title, e.description, e.start_time, e.end_time);
             tbody.append(newrow);
         });
     })
@@ -190,7 +205,9 @@ $("#addEventForm").submit(function() {
     });
     return false;
 });
+
+$(".voter-edit").each(function() {
+        $(this).colorbox({inline:true, width:"50%", href:"#voter"});
+});
+$("#testbtn").colorbox({inline:true, width:"50%", href:"#voter"});
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
