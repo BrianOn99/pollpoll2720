@@ -73,26 +73,20 @@
                 </div>
             </div>
             <input type="submit"  name="submit" value="Submit" />
-
-            <script type="text/javascript">
-                $(function () {
-                    $('.date').datetimepicker();
-                });
-            </script>
         </form>
 
-        <form class="form-horizontal">
-            <table class="table" id="option-table">
-                <caption>Choices</caption>
-                <thead><tr><th>Description</th> <th>Image</th></tr></thead>
-                <tbody>
-                <tr>
-                  <td> <input class="form-control" type="text" name="choise-desc" required /> </td>
-                  <td>Image</td>
-                </tr>
-                </tbody>
-            </table>
-        </form>
+        <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker();
+            });
+        </script>
+
+        <table class="table" id="option-table">
+            <caption>Choices</caption>
+            <thead><tr><th class="col-md-6">Description</th> <th class="col-md-6">Image</th></tr></thead>
+            <tbody>
+            </tbody>
+        </table>
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
     </div>
 
@@ -116,8 +110,10 @@ if (!String.prototype.format) {
 $("#more-option").click(function() {
     var defaultrow = $(
             '<tr>' +
-              '<td> <input class="form-control" type="text" name="choise-desc" required /> </td>' +
-              '<td>Image</td>' +
+            '<td class="col-md-6">' +
+            '<input class="form-control" type="text" name="choise-desc" required />' +
+            '</td>' +
+            '<td class="col-md-6"><form><input type="file" /></form></td>' +
             '</tr>');
     $("#option-table > tbody").append(defaultrow);
 });
@@ -145,6 +141,15 @@ loadEvents();
 
 $("#addEventForm").submit(function() {
     alert("submit");
+    /*
+     * TODO:
+     * send individual files by ajax first, server give me back a handle id
+     * put this id in a hidden field, to associate it with the option
+     * finally send all data
+     * 
+     * this has low priority, because it is additionalfunctionality. And, it is 
+     * very complicated, at least need 5 human hours
+     */
     var epoch = function(datestr) {
             var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]){1,2}:([0-9]{2}) (AM|PM)/;
             var t = pattern.exec(datestr);
