@@ -5,10 +5,7 @@ DB::$user = DB_USER;
 DB::$password = DB_PASS;
 DB::$dbName = DB_NAME;
 
-function get_events()
-{
-    return DB::query('SELECT * FROM poll_event');
-}
+date_default_timezone_set('Asia/Hong_Kong');
 
 class User
 {
@@ -47,10 +44,15 @@ class User
                 return DB::query("SELECT * FROM poll_event WHERE user_id=%d", $this->u_id);
         }
 
+        /* the passed time should be unix timestamp */
         function create_event($event_info)
         {
+                DB::debugMode();
                 $event_info["user_id"] = $this->u_id;
+                $event_info["start_time"] = date('Y-m-d H:i:s', $event_info["start_time"]);
+                $event_info["end_time"] = date('Y-m-d H:i:s', $event_info["end_time"]);
                 DB::insert('poll_event', $event_info);
+                return new Event_manager($this->u_id, DB::queryFirstField("SELECT LAST_INSERT_ID()"));
         }
 }
 
@@ -85,21 +87,6 @@ class Event_manager extends Event_base
                 parent::__construct($e_id);
                 $this->user_id = $u_id;
         }
-
-        /* the passed time should be unix timestamp */
-        public static function create($name, $title, $desc, $type, $start_t, $end_t)
-        {
-                echo $name, ' ', $type, ' ', $start_t;
-                DB::insert('poll_event', array(
-                        'user_id' => self::name2id($name),
-                        'title' => $title,
-                        'description' => $desc,
-                        'event_type' => $type,
-                        'start_time' => date('Y-m-d H:i:s', $start_t),
-                        'end_time' => date('Y-m-d H:i:s', $end_t)));
-                return new Event_manager($name, DB::queryFirstField("SELECT LAST_INSERT_ID()"));
-        }
-
 
         function remove()
         {

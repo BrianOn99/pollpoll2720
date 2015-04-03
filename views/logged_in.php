@@ -102,7 +102,7 @@ if (!String.prototype.format) {
 function loadEvents() {
     $.ajax({
         method: "POST",
-        url: "ajax/events.php",
+        url: "../ajax/events.php",
         dataType: "json"
     })
     .done(function(eventList) {
@@ -122,12 +122,30 @@ loadEvents();
 
 $("#addEventForm").submit(function() {
     alert("submit");
+    var epoch = function(datestr) {
+            var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]){1,2}:([0-9]{2}) (AM|PM)/;
+            var t = pattern.exec(datestr);
+            var hour = parseInt(t[4]);
+            if (t[6] == "PM") {
+                    hour += 12;
+            }
+            return new Date(parseInt(t[3]), parseInt(t[2]), parseInt(t[1]),
+                            hour, parseInt(t[5])).getTime() / 1000;
+    }
+
+    var formdata = {};
+    $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
+    formdata["start"] = epoch(formdata["start"]);
+    formdata["end"] = epoch(formdata["end"]);
+    console.log(JSON.stringify(formdata));
+
     $.ajax({
         type: "POST",
-        url: "ajax/add_event.php",
-        data: $("#addEventForm").serialize(),
+        url: "../ajax/add_event.php",
+        data: JSON.stringify(formdata),
+        contentType: 'application/json; charset=utf-8',
         success: function(data) {
-                alert(data);
+                console.log(data);
         }
     });
     return false;
