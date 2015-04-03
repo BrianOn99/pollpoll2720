@@ -72,14 +72,28 @@
                     </span>
                 </div>
             </div>
-        <script type="text/javascript">
-            $(function () {
-                $('.date').datetimepicker();
-            });
-        </script>
-
             <input type="submit"  name="submit" value="Submit" />
+
+            <script type="text/javascript">
+                $(function () {
+                    $('.date').datetimepicker();
+                });
+            </script>
         </form>
+
+        <form class="form-horizontal">
+            <table class="table" id="option-table">
+                <caption>Choices</caption>
+                <thead><tr><th>Description</th> <th>Image</th></tr></thead>
+                <tbody>
+                <tr>
+                  <td> <input class="form-control" type="text" name="choise-desc" required /> </td>
+                  <td>Image</td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+        <button type="button" class="btn btn-primary" id="more-option">add more option</button>
     </div>
 
   </div>
@@ -98,6 +112,15 @@ if (!String.prototype.format) {
         });
     };
 }
+
+$("#more-option").click(function() {
+    var defaultrow = $(
+            '<tr>' +
+              '<td> <input class="form-control" type="text" name="choise-desc" required /> </td>' +
+              '<td>Image</td>' +
+            '</tr>');
+    $("#option-table > tbody").append(defaultrow);
+});
 
 function loadEvents() {
     $.ajax({
@@ -129,15 +152,24 @@ $("#addEventForm").submit(function() {
             if (t[6] == "PM") {
                     hour += 12;
             }
-            return new Date(parseInt(t[3]), parseInt(t[2]), parseInt(t[1]),
+            return new Date(parseInt(t[3]), parseInt(t[1]), parseInt(t[2]),
                             hour, parseInt(t[5])).getTime() / 1000;
     }
 
     var formdata = {};
+    var options = [];
     $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
     formdata["start"] = epoch(formdata["start"]);
     formdata["end"] = epoch(formdata["end"]);
-    console.log(JSON.stringify(formdata));
+    var i = $("#option-table input");
+    $("#option-table input").each(function(i) {
+        var opt = {};
+        opt.desc = $(this).serializeArray()[0].value;
+        opt.img = "not set";
+        options.push(opt);
+    });
+    formdata["options"] = options;
+    alert(JSON.stringify(formdata));
 
     $.ajax({
         type: "POST",
@@ -146,6 +178,9 @@ $("#addEventForm").submit(function() {
         contentType: 'application/json; charset=utf-8',
         success: function(data) {
                 console.log(data);
+        },
+        error: function ( jqXHR, textStatus ) {
+                console.log( "Request failed: " + textStatus );
         }
     });
     return false;

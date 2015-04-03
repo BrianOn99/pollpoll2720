@@ -47,7 +47,6 @@ class User
         /* the passed time should be unix timestamp */
         function create_event($event_info)
         {
-                DB::debugMode();
                 $event_info["user_id"] = $this->u_id;
                 $event_info["start_time"] = date('Y-m-d H:i:s', $event_info["start_time"]);
                 $event_info["end_time"] = date('Y-m-d H:i:s', $event_info["end_time"]);
@@ -74,6 +73,12 @@ class Event_base
                         $this->e_id);
         }
 
+        function get_options() {
+                return DB::query("SELECT choice_id, description, image_url"
+                        . " FROM choice WHERE event_id=%d",
+                        $this->e_id);
+        }
+
         function get_result() {}
 }
 
@@ -85,7 +90,7 @@ class Event_manager extends Event_base
         function __construct($u_id, $e_id)
         {
                 parent::__construct($e_id);
-                $this->user_id = $u_id;
+                $this->u_id = $u_id;
         }
 
         function remove()
@@ -93,11 +98,19 @@ class Event_manager extends Event_base
                 DB::delete('poll_event', 'event_id=%d', $this->e_id);
         }
 
+        function add_option($opt) {
+                DB::insert("choice", array(
+                        "event_id" => $this->e_id,
+                        "image_url" => $opt["img"],
+                        "description" => $opt["desc"],
+                        "vote_count" => 0));
+        }
+
         function is_active() {}
-                function activate() {}
-                protected function send_email() {}
-                function get_voters() {}
-                function update_voters() {}
+        function activate() {}
+        protected function send_email() {}
+        function get_voters() {}
+        function update_voters() {}
 }
 
 class Event_voter extends Event_base
