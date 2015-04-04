@@ -100,7 +100,7 @@
       <p>
         input as &quot;name&quot; &quot;email&quot;, each pair seperated by newline.
       </p>
-      <textarea class="form-control" id="voter" style="height: 20em"></textarea>
+      <textarea class="form-control" id="voter-text" style="height: 20em"></textarea>
       <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
       <button type="button" class="btn btn-primary" id="voter-import">import csv</button>
       <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
@@ -147,23 +147,35 @@ function loadEvents() {
         dataType: "json"
     })
     .done(function(eventList) {
-        console.log(eventList);
+        console.log(JSON.stringify(eventList));
         var tbody = $("#etable");
         eventList.forEach(function(e) {
-                var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
-                             '<td><button type="button" class="btn btn-default btn-sm voter-edit">' +
-                             '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
-                             '</button></td></tr>').format(
-                             e.title, e.description, e.start_time, e.end_time);
+            var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
+                '<td><button type="button" class="btn btn-default btn-sm voter-edit" data-eventid="{4}">' +
+                '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
+                '</button></td></tr>').format(
+                    e.title, e.description, e.start_time, e.end_time, e.event_id);
             tbody.append(newrow);
+
+            /*
+             * when the edit button clicked, load voters and switch to voter 
+             * tab.
+             * Previously it put this at the bottom of this file, and had a 
+             * weird bug: sometimes the clisk event is registerd, sometimes 
+             * not.  Guess what? I forget ajax is asynchronous. The button 
+             * still not exist sometimes.  Now I know why concurency program is 
+             * hard to develop  :-(
+             */
             $(".voter-edit").each(function() {
-                    $(this).click(function() {
-                            $('.nav a[href="#voter"]').trigger("click");
-                    });
+                $(this).click(function() {
+                    $("#voter-text").attr("data-eventid", $(this).attr("data-eventid"));
+                    $('.nav a[href="#voter"]').trigger("click");
+                });
             });
         });
     })
     .fail(function( jqXHR, textStatus ) {
+        alert(textStatux);
         console.log( "Request failed: " + textStatus );
     });
 }
@@ -220,4 +232,28 @@ $("#addEventForm").submit(function() {
     });
     return false;
 });
+
+$("#voter-submit").click(function() {
+    voters_info = $("#voter-text").val();
+    vdata = {};
+    vdata.event_id = $("#voter-text").attr("data-eventid");
+    vdata.voters = voters_info.split("\n").map(function(row) {
+        r = row.split(/ +/);
+        return { name: r[0], email: r[1] };
+    });
+    console.log(JSON.stringify(vdata));
+    $.ajax({
+        type: "POST",
+        url: "../ajax/set_voter.php",
+        data: JSON.stringify(vdata),
+        contentType: 'application/json; charset=utf-8',
+        success: function(data) {
+                console.log(data);
+        },
+        error: function ( jqXHR, textStatus ) {
+                console.log( "Request failed: " + textStatus );
+        }
+    });
+});
+
 </script>

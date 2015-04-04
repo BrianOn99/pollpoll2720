@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`choice` (
 CREATE TABLE IF NOT EXISTS `pollpoll`.`voter` (
   `voter_id` int PRIMARY KEY AUTO_INCREMENT,
   `event_id` int NOT NULL,
+  `key` varchar(255),         # the key to verify voter
   `name` varchar(63) NOT NULL,
   `email` varchar(255) NOT NULL,
   `voted_choice_id` int,

@@ -31,7 +31,7 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [ ] sort event
 - [lib only] delete event
 - [ ] activates event
-- [ ] edit voters
+- [add only] edit voters
 - [ ] export voters
 - [ ] import voters
 

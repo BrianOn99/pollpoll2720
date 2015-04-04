@@ -1,6 +1,14 @@
 <?php
+
+/*
+ini_set('display_errors',1);
+ini_set('display_startup_errors',1);
+error_reporting(-1);
+ */
+
 require_once "meekrodb.2.3.class.php";
 require_once "../config/db.php";
+
 DB::$user = DB_USER;
 DB::$password = DB_PASS;
 DB::$dbName = DB_NAME;
@@ -106,6 +114,23 @@ class Event_manager extends Event_base
                         "vote_count" => 0));
         }
 
+        function set_voters($voters) {
+                $this->clear_voters();
+                foreach ($voters as $v) {
+                        /* seed the random number generater, so the key cannot 
+                         * be guessed. key related part should be moved to 
+                         * acitvate method */
+                        srand(time());
+
+                        DB::insert("voter",  array(
+                                "event_id" => $this->e_id,
+                                "key" => hash("sha256", rand()),
+                                "name" => $v["name"],
+                                "email" => $v["email"]));
+                }
+        }
+
+        function clear_voters() {}
         function is_active() {}
         function activate() {}
         protected function send_email() {}
