@@ -15,7 +15,7 @@ if (isset($registration)) {
 ?>
 <!doctype html>
 <html>
-<?php include "_include/head.php"; ?>
+<?php include "../_include/head.php"; ?>
 <body>
 <div class=container>
 <h1>Register</h1>

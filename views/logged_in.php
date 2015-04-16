@@ -95,7 +95,7 @@
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
     </div>
 
-    <div role="tabpanel" class="tab-pane active" id="voter">
+    <div role="tabpanel" class="tab-pane" id="voter">
       <p>Please select event in the show tab</p>
       <p>
         input as &quot;name&quot; &quot;email&quot;, each pair seperated by newline.
@@ -133,7 +133,7 @@ $("#more-option").click(function() {
     var defaultrow = $(
             '<tr>' +
             '<td class="col-md-6">' +
-            '<input class="form-control" type="text" name="choise-desc" required />' +
+            '<input class="form-control" type="text" name="choice-desc" required />' +
             '</td>' +
             '<td class="col-md-6"><form><input type="file" /></form></td>' +
             '</tr>');
@@ -209,7 +209,7 @@ $("#addEventForm").submit(function() {
     formdata["start"] = epoch(formdata["start"]);
     formdata["end"] = epoch(formdata["end"]);
     var i = $("#option-table input");
-    $("#option-table input").each(function(i) {
+    $('#option-table input[name="choice-desc"]').each(function(i) {
         var opt = {};
         opt.desc = $(this).serializeArray()[0].value;
         opt.img = "not set";
