@@ -103,7 +103,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/exporting/filesaver.js"></script>
+<script src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
 
 <script>
@@ -139,7 +139,7 @@ voterEditor = {
         this.elm.val(text);
     },
 
-    loadVoters : function() {
+    loadVoters: function() {
 	if (!this.eventId) {
 	    alert("Loading voters: EventId not set!");
 	    return false;
@@ -163,6 +163,11 @@ voterEditor = {
 	    alert(textStatus);
 	    console.log( "Request failed: " + textStatus );
 	});
+    },
+
+    exportVoters: function() {
+        var blob = new Blob([this.elm.val()], {type: "text/csv;charset=utf-8"});
+        saveAs(blob, "voter.csv");
     }
 }
 
@@ -282,4 +287,7 @@ $("#voter-submit").click(function() {
     });
 });
 
+$("#voter-export").click(function() {
+    voterEditor.exportVoters();
+});
 </script>
