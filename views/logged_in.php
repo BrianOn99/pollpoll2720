@@ -15,7 +15,6 @@
   <div class="tab-content">
     <div role="tabpanel" class="tab-pane active" id="list">
 
-      <button id="testbtn">test</button>
       <table class="table table-striped" id="etable">
         <thead>
           <tr>
@@ -27,13 +26,6 @@
           </tr>
         </thead>
         <tbody>
-        <tr>
-          <td>E</td>
-          <td>desc</td>
-          <td>1-1-1</td>
-          <td>6-6-6</td>
-          <td>edit</td>
-        </tr>
         </tbody>
       </table>
     </div>
@@ -104,8 +96,6 @@
       <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
       <button type="button" class="btn btn-primary" id="voter-import">import csv</button>
       <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
-      <button class="voter-edit">kkk</button>
-      <button type="button" class="btn btn-default btn-sm voter-edit">
     </div>
 </div>
 
