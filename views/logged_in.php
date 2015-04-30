@@ -103,6 +103,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/amcharts/3.13.0/exporting/filesaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
 
 <script>
@@ -130,6 +131,41 @@ $("#more-option").click(function() {
     $("#option-table > tbody").append(defaultrow);
 });
 
+voterEditor = {
+    elm : $("#voter-text"),
+    eventId : null,
+
+    setText: function(text) {
+        this.elm.val(text);
+    },
+
+    loadVoters : function() {
+	if (!this.eventId) {
+	    alert("Loading voters: EventId not set!");
+	    return false;
+	}
+
+	$.ajax({
+	    method: "POST",
+	    url: "../ajax/get_voters.php",
+	    dataType: "json",
+	    data: {event_id: this.eventId}
+	})
+	.done(function(voterList) {
+            displayText = "";
+            alert(JSON.stringify(voterList));
+            for (voter of voterList) {
+                displayText += "{0}, {1}\n".format(voter.name, voter.email);
+            }
+	    this.setText(displayText);
+	}.bind(this))
+	.fail(function( jqXHR, textStatus ) {
+	    alert(textStatus);
+	    console.log( "Request failed: " + textStatus );
+	});
+    }
+}
+
 function loadEvents() {
     $.ajax({
         method: "POST",
@@ -156,16 +192,16 @@ function loadEvents() {
              * still not exist sometimes.  Now I know why concurency program is 
              * hard to develop  :-(
              */
-            $(".voter-edit").each(function() {
-                $(this).click(function() {
-                    $("#voter-text").attr("data-eventid", $(this).attr("data-eventid"));
-                    $('.nav a[href="#voter"]').trigger("click");
-                });
-            });
         });
+
+        $(".voter-edit").click(function() {
+	    voterEditor.eventId = $(this).attr("data-eventid");
+	    voterEditor.loadVoters();
+	    $('.nav a[href="#voter"]').trigger("click");
+	});
     })
     .fail(function( jqXHR, textStatus ) {
-        alert(textStatux);
+        alert(textStatus);
         console.log( "Request failed: " + textStatus );
     });
 }
@@ -226,9 +262,9 @@ $("#addEventForm").submit(function() {
 $("#voter-submit").click(function() {
     voters_info = $("#voter-text").val();
     vdata = {};
-    vdata.event_id = $("#voter-text").attr("data-eventid");
+    vdata.event_id = voterEditor.eventId;
     vdata.voters = voters_info.split("\n").map(function(row) {
-        r = row.split(/ +/);
+        r = row.split(/, +/);
         return { name: r[0], email: r[1] };
     });
     console.log(JSON.stringify(vdata));
