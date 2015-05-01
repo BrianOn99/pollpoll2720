@@ -45,12 +45,13 @@
 <li>The PHP Login Project -- handling login/logout</li>
 <li>MeekroDB -- prevent sql injection and neat code</li>
 <li>Twitter bootstrap -- frontend ui design</li>
+<li>FileSaver.js -- export voters as file</li>
 </ul>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
-<p>Create a database <em>login</em> and the table <em>users</em> via the SQL statements in the <code>_install</code> folder.
+<p>Create a database and tables via the SQL statements in the <code>_install</code> folder.
 Change mySQL database user and password in <code>config/db.php</code> (<em>DB_USER</em> and <em>DB_PASS</em>).</p>
 
 <ol>
@@ -58,9 +59,6 @@ Change mySQL database user and password in <code>config/db.php</code> (<em>DB_US
 <li>change database settings in config/db.php</li>
 <li>run the sql statements in _installation</li>
 </ol>
-
-<h2>
-<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO</h2>
 
 <h3>
 <a id="manager" class="anchor" href="#manager" aria-hidden="true"><span class="octicon octicon-link"></span></a>manager</h3>
@@ -79,33 +77,34 @@ Change mySQL database user and password in <code>config/db.php</code> (<em>DB_US
 <li>[ ] sort event</li>
 <li>[lib only] delete event</li>
 <li>[ ] activates event</li>
-<li>[add only] edit voters</li>
-<li>[ ] export voters</li>
-<li>[ ] import voters</li>
+<li>[X] edit voters</li>
+<li>[X] export voters</li>
+<li>[X] import voters</li>
+<li>[ ] view result</li>
 </ul>
 
 <h3>
 <a id="voter" class="anchor" href="#voter" aria-hidden="true"><span class="octicon octicon-link"></span></a>voter</h3>
 
 <ul>
-<li>[ ] view options</li>
-<li>[ ] vote</li>
-<li>[ ] view result</li>
+<li>[x] view options</li>
+<li>[X] vote</li>
+<li>[X] view result</li>
 </ul>
 
 <h2>
 <a id="bug-蟲蟲" class="anchor" href="#bug-%E8%9F%B2%E8%9F%B2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bug 蟲蟲</h2>
 
 <ul>
-<li>event time set to zero (need to convert to mysql syntax)</li>
+<li>event time is delayed by 1 month (how strange!)</li>
 <li>many security problems (I will concentrateon features for now)</li>
 </ul>
 
 <h2>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
-<p>Licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a>. You can use this script for free for any
-private or commercial projects.</p>
+<p>Licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT</a>.
+You can use this script for free for any private or commercial projects.</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/BrianOn99">BrianOn99</a></p>
