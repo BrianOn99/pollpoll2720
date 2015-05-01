@@ -13,6 +13,9 @@
 
   <!-- Tab panes -->
   <div class="tab-content">
+    <!--
+    List event interface
+    -->
     <div role="tabpanel" class="tab-pane active" id="list">
 
       <table class="table table-striped" id="etable">
@@ -30,6 +33,9 @@
       </table>
     </div>
 
+    <!--
+    Add event Interface
+    -->
     <div role="tabpanel" class="tab-pane" id="add">
       <form class="form-horizontal" id="addEventForm">
         <div class="form-group">
@@ -98,6 +104,8 @@
       I copy them from http://www.tutorialspoint.com/bootstrap/bootstrap_collapse_plugin.htm
       -->
       <div class="panel-group" id="accordion">
+
+        <!-- voter editor -->
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
@@ -109,12 +117,16 @@
           </div>
           <div id="collapseOne" class="panel-collapse collapse in">
             <div class="panel-body">
-              <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
+              <textarea class="form-control" id="voter-text" style="height: 20em">
+              No event selected
+              </textarea>
               <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
               <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
             </div>
           </div>
         </div>
+
+        <!-- vote summary -->
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
@@ -131,6 +143,8 @@
             </div>
           </div>
         </div>
+
+        <!-- vote detail -->
         <div class="panel panel-default">
           <div class="panel-heading">
             <h4 class="panel-title">
