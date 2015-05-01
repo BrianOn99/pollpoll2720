@@ -33,7 +33,15 @@ $login = new Login();
 
 <!doctype html>
 <html>
-<?php include "../_include/head.php"; ?>
+<?php
+if ($login->isUserLoggedIn() == true) {
+    /* only have basic js (twitter bootstrap)*/
+    include "../_include/manager_head.php";
+} else {
+    /* more js for manager page */
+    include "../_include/head.php";
+}
+?>
 <body>
 <div class="container">
 
