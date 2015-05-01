@@ -88,14 +88,15 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="voter">
-      <p>Please select event in the show tab</p>
-      <p>
-        input as &quot;name&quot; &quot;email&quot;, each pair seperated by newline.
-      </p>
-      <p>
-      Drag and drop into the teatarea to import voters from file
-      </p>
-      <textarea class="form-control" id="voter-text" style="height: 20em"></textarea>
+    <button type="button" class="btn btn-default" id="help-voter-edit">
+      <span class="glyphicon glyphicon-question-sign"
+	    aria-hidden="true"
+	    title="Popover title"
+            data-toggle="popover"
+	    data-content="Another popover" >
+      </span> Help
+    </button>
+      <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
       <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
       <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
     </div>
@@ -331,4 +332,10 @@ $("#voter-text").on("drop", function(e) {
     return false;
 });
 
+$("#help-voter-edit").click(function() {
+    var helpmsg = "Please select event in the \"show\" tab\n" +
+		  "input as name, email pair,  each pair seperated by newline.\n" +
+		  "Drag and drop into the teatarea to import voters from file\n"
+    alert(helpmsg);
+});
 </script>
