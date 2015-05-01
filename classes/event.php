@@ -130,11 +130,15 @@ class Event_manager extends Event_base
                 }
         }
 
+	function get_voters() {
+                return DB::query("SELECT name, email FROM voter WHERE event_id=%d",
+				$this->e_id);
+	}
+
         function clear_voters() {}
         function is_active() {}
         function activate() {}
         protected function send_email() {}
-        function get_voters() {}
         function update_voters() {}
 }
 

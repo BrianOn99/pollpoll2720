@@ -88,13 +88,16 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="voter">
-      <p>Please select event in the show tab</p>
-      <p>
-        input as &quot;name&quot; &quot;email&quot;, each pair seperated by newline.
-      </p>
-      <textarea class="form-control" id="voter-text" style="height: 20em"></textarea>
+    <button type="button" class="btn btn-default" id="help-voter-edit">
+      <span class="glyphicon glyphicon-question-sign"
+	    aria-hidden="true"
+	    title="Popover title"
+            data-toggle="popover"
+	    data-content="Another popover" >
+      </span> Help
+    </button>
+      <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
       <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
-      <button type="button" class="btn btn-primary" id="voter-import">import csv</button>
       <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
     </div>
 </div>
@@ -103,6 +106,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
 
 <script>
@@ -130,6 +134,58 @@ $("#more-option").click(function() {
     $("#option-table > tbody").append(defaultrow);
 });
 
+voterEditor = {
+    elm : $("#voter-text"),
+    eventId : null,
+
+    setText: function(text) {
+        this.elm.val(text);
+    },
+
+    loadVoters: function() {
+        if (!this.eventId) {
+            alert("Loading voters: EventId not set!");
+            return false;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "../ajax/get_voters.php",
+            dataType: "json",
+            data: {event_id: this.eventId}
+        })
+        .done(function(voterList) {
+	    textEditor = this;  /* closure variable */
+	    displayText = "";
+	    alert(JSON.stringify(voterList));
+	    for (voter of voterList) {
+		displayText += "{0}, {1}\n".format(voter.name, voter.email);
+	    }
+            textEditor.setText(displayText);
+        }.bind(this))
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
+    },
+
+    exportVoters: function() {
+        var blob = new Blob([this.elm.val()], {type: "text/csv;charset=utf-8"});
+        saveAs(blob, "voter.csv");
+    },
+
+    importVoters: function(file) {
+        textEditor = this;  /* closure variable */
+        var reader = new FileReader();
+        alert(file.size);
+        reader.onload = function(e) {
+            var content = e.target.result;
+            textEditor.setText(content);
+        }
+        reader.readAsText(file);
+    }
+}
+
 function loadEvents() {
     $.ajax({
         method: "POST",
@@ -156,16 +212,16 @@ function loadEvents() {
              * still not exist sometimes.  Now I know why concurency program is 
              * hard to develop  :-(
              */
-            $(".voter-edit").each(function() {
-                $(this).click(function() {
-                    $("#voter-text").attr("data-eventid", $(this).attr("data-eventid"));
-                    $('.nav a[href="#voter"]').trigger("click");
-                });
-            });
         });
+
+        $(".voter-edit").click(function() {
+	    voterEditor.eventId = $(this).attr("data-eventid");
+	    voterEditor.loadVoters();
+	    $('.nav a[href="#voter"]').trigger("click");
+	});
     })
     .fail(function( jqXHR, textStatus ) {
-        alert(textStatux);
+        alert(textStatus);
         console.log( "Request failed: " + textStatus );
     });
 }
@@ -226,9 +282,9 @@ $("#addEventForm").submit(function() {
 $("#voter-submit").click(function() {
     voters_info = $("#voter-text").val();
     vdata = {};
-    vdata.event_id = $("#voter-text").attr("data-eventid");
+    vdata.event_id = voterEditor.eventId;
     vdata.voters = voters_info.split("\n").map(function(row) {
-        r = row.split(/ +/);
+        r = row.split(/, +/);
         return { name: r[0], email: r[1] };
     });
     console.log(JSON.stringify(vdata));
@@ -239,6 +295,7 @@ $("#voter-submit").click(function() {
         contentType: 'application/json; charset=utf-8',
         success: function(data) {
                 console.log(data);
+                alert("submitted");
         },
         error: function ( jqXHR, textStatus ) {
                 console.log( "Request failed: " + textStatus );
@@ -246,4 +303,39 @@ $("#voter-submit").click(function() {
     });
 });
 
+$("#voter-export").click(function() {
+    voterEditor.exportVoters();
+});
+
+var dropbox;
+
+dropbox = document.getElementById("voter-text");
+dropbox.addEventListener("dragenter", dragenter, false);
+dropbox.addEventListener("dragover", dragover, false);
+
+function dragenter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function dragover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+$("#voter-text").on("drop", function(e) {
+    var f = e.originalEvent.dataTransfer.files[0];
+    alert(f.name + " dropped");
+    if (f){
+        voterEditor.importVoters(f);
+    }
+    return false;
+});
+
+$("#help-voter-edit").click(function() {
+    var helpmsg = "Please select event in the \"show\" tab\n" +
+		  "input as name, email pair,  each pair seperated by newline.\n" +
+		  "Drag and drop into the teatarea to import voters from file\n"
+    alert(helpmsg);
+});
 </script>
