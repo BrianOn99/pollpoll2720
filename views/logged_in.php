@@ -91,6 +91,12 @@
       <button type="button" class="btn btn-default" id="help-voter-edit">
 	<span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
       </button>
+
+      <!--
+      event management interface
+      Okay, the nested div is quite horrifying
+      I copy them from http://www.tutorialspoint.com/bootstrap/bootstrap_collapse_plugin.htm
+      -->
       <div class="panel-group" id="accordion">
 	<div class="panel panel-default">
 	  <div class="panel-heading">
@@ -120,7 +126,8 @@
 	  </div>
 	  <div id="collapseTwo" class="panel-collapse collapse">
 	    <div class="panel-body">
-	      empty
+                <button id="get-result">Get result</button>
+                <div id="chartContainer" style="height: 300px; width: 100%;"> </div>
 	    </div>
 	  </div>
 	</div>
@@ -150,6 +157,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js"></script>
 
 <script>
 /* copied form stackoverflow by fearphage for readable tring formatting */
@@ -227,6 +235,56 @@ voterEditor = {
         reader.readAsText(file);
     }
 }
+
+$("#get-result").click(function() {
+    if (!voterEditor.eventId) {
+        alert("Loading voters: EventId not set!");
+        return false;
+    }
+
+    $.ajax({
+        method: "POST",
+        url: "../ajax/vote_result.php",
+        dataType: "json",
+        data: {event_id: voterEditor.eventId}
+    })
+    .done(function(voterList) {
+        alert(JSON.stringify(voterList));
+        var dataGot = [];
+        for (i in voterList) {
+            choice = voterList[i];
+            dataGot.push({y: parseInt(choice.vote_count),
+                             legendText: choice.description});
+        }
+        var chart = new CanvasJS.Chart("chartContainer", {
+                title:{
+                text: "Result"
+                },
+                animationEnabled: true,
+                legend: {
+                        verticalAlign: "bottom",
+                        horizontalAlign: "center"
+                },
+                data: [
+                      {
+                        indexLabelFontSize: 20,
+                        indexLabelFontFamily: "Garamond",
+                        indexLabelFontColor: "darkgrey",
+                        indexLabelLineColor: "darkgrey",
+                        indexLabelPlacement: "outside",
+                        type: "doughnut",
+                        showInLegend: true,
+                        dataPoints: dataGot
+                      }
+                ]
+        });
+        chart.render();
+     })
+    .fail(function( jqXHR, textStatus ) {
+        alert(textStatus);
+        console.log( "Request failed: " + textStatus );
+    });
+});
 
 function loadEvents() {
     $.ajax({

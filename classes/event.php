@@ -136,6 +136,11 @@ class Event_manager extends Event_base
 				$this->e_id);
 	}
 
+	function get_result() {
+                return DB::query("SELECT choice_id, description, vote_count FROM choice WHERE event_id=%d",
+				$this->e_id);
+	}
+
         function clear_voters() {}
         function is_active() {}
         function activate() {}
