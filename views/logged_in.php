@@ -89,7 +89,7 @@
 
     <div role="tabpanel" class="tab-pane" id="manage">
       <button type="button" class="btn btn-default" id="help-voter-edit">
-	<span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
+        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
       </button>
 
       <!--
@@ -98,54 +98,54 @@
       I copy them from http://www.tutorialspoint.com/bootstrap/bootstrap_collapse_plugin.htm
       -->
       <div class="panel-group" id="accordion">
-	<div class="panel panel-default">
-	  <div class="panel-heading">
-	    <h4 class="panel-title">
-	      <a data-toggle="collapse" data-parent="#accordion" 
-		href="#collapseOne">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseOne">
                 Voters
-	      </a>
-	    </h4>
-	  </div>
-	  <div id="collapseOne" class="panel-collapse collapse in">
-	    <div class="panel-body">
-	      <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
-	      <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
-	      <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
-	    </div>
-	  </div>
-	</div>
-	<div class="panel panel-default">
-	  <div class="panel-heading">
-	    <h4 class="panel-title">
-	      <a data-toggle="collapse" data-parent="#accordion" 
-		href="#collapseTwo">
+              </a>
+            </h4>
+          </div>
+          <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+              <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
+              <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
+              <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseTwo">
                 Vote Summary
-	      </a>
-	    </h4>
-	  </div>
-	  <div id="collapseTwo" class="panel-collapse collapse">
-	    <div class="panel-body">
+              </a>
+            </h4>
+          </div>
+          <div id="collapseTwo" class="panel-collapse collapse">
+            <div class="panel-body">
                 <button id="get-result">Get result</button>
                 <div id="chartContainer" style="height: 300px; width: 100%;"> </div>
-	    </div>
-	  </div>
-	</div>
-	<div class="panel panel-default">
-	  <div class="panel-heading">
-	    <h4 class="panel-title">
-	      <a data-toggle="collapse" data-parent="#accordion" 
-		href="#collapseThree">
+            </div>
+          </div>
+        </div>
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h4 class="panel-title">
+              <a data-toggle="collapse" data-parent="#accordion" 
+                href="#collapseThree">
                 Vote Detail
-	      </a>
-	    </h4>
-	  </div>
-	  <div id="collapseThree" class="panel-collapse collapse">
-	    <div class="panel-body">
-	      empty
-	    </div>
-	  </div>
-	</div>
+              </a>
+            </h4>
+          </div>
+          <div id="collapseThree" class="panel-collapse collapse">
+            <div class="panel-body">
+              empty
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -2,7 +2,7 @@
 if (!String.prototype.format) {
     String.prototype.format = function() {
         var args = arguments;
-        return this.replace(/{(\d+)}/g, function(match, number) { 
+        return this.replace(/{(\d+)}/g, function(match, number) {
             return typeof args[number] != 'undefined'
             ? args[number]
             : match
@@ -37,6 +37,8 @@ $("document").ready(function() {
                 return false;
             }
 
+            textEditor = this;  /* closure variable */
+
             $.ajax({
                 method: "POST",
                 url: "../ajax/get_voters.php",
@@ -44,14 +46,13 @@ $("document").ready(function() {
                 data: {event_id: this.eventId}
             })
             .done(function(voterList) {
-                textEditor = this;  /* closure variable */
                 displayText = "";
                 alert(JSON.stringify(voterList));
-                for (voter of voterList) {
+                for (var voter of voterList) {
                     displayText += "{0}, {1}\n".format(voter.name, voter.email);
                 }
                 textEditor.setText(displayText);
-            }.bind(this))
+            })
             .fail(function( jqXHR, textStatus ) {
                 alert(textStatus);
                 console.log( "Request failed: " + textStatus );
@@ -90,35 +91,35 @@ $("document").ready(function() {
         .done(function(voterList) {
             alert(JSON.stringify(voterList));
             var dataGot = [];
-            for (i in voterList) {
+            for (var i in voterList) {
                 choice = voterList[i];
-                dataGot.push({y: parseInt(choice.vote_count),
-                                 legendText: choice.description});
+                dataGot.push({y         : parseInt(choice.vote_count),
+                              legendText: choice.description});
             }
             var chart = new CanvasJS.Chart("chartContainer", {
-                    title:{
+                title:{
                     text: "Result"
-                    },
-                    animationEnabled: true,
-                    legend: {
-                            verticalAlign: "bottom",
-                            horizontalAlign: "center"
-                    },
-                    data: [
-                          {
-                            indexLabelFontSize: 20,
-                            indexLabelFontFamily: "Garamond",
-                            indexLabelFontColor: "darkgrey",
-                            indexLabelLineColor: "darkgrey",
-                            indexLabelPlacement: "outside",
-                            type: "doughnut",
-                            showInLegend: true,
-                            dataPoints: dataGot
-                          }
-                    ]
+                },
+                animationEnabled: true,
+                legend: {
+                    verticalAlign: "bottom",
+                    horizontalAlign: "center"
+                },
+                data: [
+                    {
+                        indexLabelFontSize: 20,
+                        indexLabelFontFamily: "Garamond",
+                        indexLabelFontColor: "darkgrey",
+                        indexLabelLineColor: "darkgrey",
+                        indexLabelPlacement: "outside",
+                        type: "doughnut",
+                        showInLegend: true,
+                        dataPoints: dataGot
+                    }
+                ]
             });
             chart.render();
-         })
+        })
         .fail(function( jqXHR, textStatus ) {
             alert(textStatus);
             console.log( "Request failed: " + textStatus );
@@ -143,12 +144,12 @@ $("document").ready(function() {
                 tbody.append(newrow);
 
                 /*
-                 * when the edit button clicked, load voters and switch to voter 
+                 * when the edit button clicked, load voters and switch to voter
                  * tab.
-                 * Previously it put this at the bottom of this file, and had a 
-                 * weird bug: sometimes the clisk event is registerd, sometimes 
-                 * not.  Guess what? I forget ajax is asynchronous. The button 
-                 * still not exist sometimes.  Now I know why concurency program is 
+                 * Previously it put this at the bottom of this file, and had a
+                 * weird bug: sometimes the clisk event is registerd, sometimes
+                 * not.  Guess what? I forget ajax is asynchronous. The button
+                 * still not exist sometimes.  Now I know why concurency program is
                  * hard to develop  :-(
                  */
             });
@@ -173,8 +174,8 @@ $("document").ready(function() {
          * send individual files by ajax first, server give me back a handle id
          * put this id in a hidden field, to associate it with the option
          * finally send all data
-         * 
-         * this has low priority, because it is additionalfunctionality. And, it is 
+         *
+         * this has low priority, because it is additionalfunctionality. And, it is
          * very complicated, at least need 5 human hours
          */
         var epoch = function(datestr) {
@@ -253,13 +254,13 @@ $("document").ready(function() {
     dropbox.addEventListener("dragover", dragover, false);
 
     function dragenter(e) {
-      e.stopPropagation();
-      e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
     }
 
     function dragover(e) {
-      e.stopPropagation();
-      e.preventDefault();
+        e.stopPropagation();
+        e.preventDefault();
     }
 
     $("#voter-text").on("drop", function(e) {
