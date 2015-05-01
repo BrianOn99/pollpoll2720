@@ -10,6 +10,7 @@ Some 3rd party libraries are used:
 * MeekroDB -- prevent sql injection and neat code
 * Twitter bootstrap -- frontend ui design
 * FileSaver.js -- export voters as file
+* canvasjs -- display vote summary
 
 ## Installation
 
@@ -33,7 +34,7 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [X] edit voters
 - [X] export voters
 - [X] import voters
-- [ ] view result
+- [X] view result
 
 ### voter
 - [x] view options
