@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`choice` (
   `event_id` int NOT NULL,
   `image_url` varchar(255),
   `description` text,
-  `vote_count` int,
+  `vote_count` int DEFAULT 0,
   CONSTRAINT `fk_event_id`
     FOREIGN KEY (event_id) REFERENCES `pollpoll`.`poll_event` (event_id)
     ON UPDATE RESTRICT
@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`choice` (
 CREATE TABLE IF NOT EXISTS `pollpoll`.`voter` (
   `voter_id` int PRIMARY KEY AUTO_INCREMENT,
   `event_id` int NOT NULL,
-  `key` varchar(255),         # the key to verify voter
+  `keyVar` varchar(255),         # the key to verify voter
   `name` varchar(63) NOT NULL,
   `email` varchar(255) NOT NULL,
   `voted_choice_id` int,
