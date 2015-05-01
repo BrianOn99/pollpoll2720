@@ -92,9 +92,11 @@
       <p>
         input as &quot;name&quot; &quot;email&quot;, each pair seperated by newline.
       </p>
+      <p>
+      Drag and drop into the teatarea to import voters from file
+      </p>
       <textarea class="form-control" id="voter-text" style="height: 20em"></textarea>
       <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
-      <button type="button" class="btn btn-primary" id="voter-import">import csv</button>
       <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
     </div>
 </div>
@@ -140,34 +142,46 @@ voterEditor = {
     },
 
     loadVoters: function() {
-	if (!this.eventId) {
-	    alert("Loading voters: EventId not set!");
-	    return false;
-	}
+        if (!this.eventId) {
+            alert("Loading voters: EventId not set!");
+            return false;
+        }
 
-	$.ajax({
-	    method: "POST",
-	    url: "../ajax/get_voters.php",
-	    dataType: "json",
-	    data: {event_id: this.eventId}
-	})
-	.done(function(voterList) {
-            displayText = "";
-            alert(JSON.stringify(voterList));
-            for (voter of voterList) {
-                displayText += "{0}, {1}\n".format(voter.name, voter.email);
-            }
-	    this.setText(displayText);
-	}.bind(this))
-	.fail(function( jqXHR, textStatus ) {
-	    alert(textStatus);
-	    console.log( "Request failed: " + textStatus );
-	});
+        $.ajax({
+            method: "POST",
+            url: "../ajax/get_voters.php",
+            dataType: "json",
+            data: {event_id: this.eventId}
+        })
+        .done(function(voterList) {
+	    textEditor = this;  /* closure variable */
+	    displayText = "";
+	    alert(JSON.stringify(voterList));
+	    for (voter of voterList) {
+		displayText += "{0}, {1}\n".format(voter.name, voter.email);
+	    }
+            textEditor.setText(displayText);
+        }.bind(this))
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
     },
 
     exportVoters: function() {
         var blob = new Blob([this.elm.val()], {type: "text/csv;charset=utf-8"});
         saveAs(blob, "voter.csv");
+    },
+
+    importVoters: function(file) {
+        textEditor = this;  /* closure variable */
+        var reader = new FileReader();
+        alert(file.size);
+        reader.onload = function(e) {
+            var content = e.target.result;
+            textEditor.setText(content);
+        }
+        reader.readAsText(file);
     }
 }
 
@@ -280,6 +294,7 @@ $("#voter-submit").click(function() {
         contentType: 'application/json; charset=utf-8',
         success: function(data) {
                 console.log(data);
+                alert("submitted");
         },
         error: function ( jqXHR, textStatus ) {
                 console.log( "Request failed: " + textStatus );
@@ -290,4 +305,30 @@ $("#voter-submit").click(function() {
 $("#voter-export").click(function() {
     voterEditor.exportVoters();
 });
+
+var dropbox;
+
+dropbox = document.getElementById("voter-text");
+dropbox.addEventListener("dragenter", dragenter, false);
+dropbox.addEventListener("dragover", dragover, false);
+
+function dragenter(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+function dragover(e) {
+  e.stopPropagation();
+  e.preventDefault();
+}
+
+$("#voter-text").on("drop", function(e) {
+    var f = e.originalEvent.dataTransfer.files[0];
+    alert(f.name + " dropped");
+    if (f){
+        voterEditor.importVoters(f);
+    }
+    return false;
+});
+
 </script>
