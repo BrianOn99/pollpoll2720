@@ -8,7 +8,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">Show</a></li>
     <li role="presentation"><a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add</a></li>
-    <li role="presentation"><a href="#voter" aria-controls="voter" role="tab" data-toggle="tab">voter</a></li>
+    <li role="presentation"><a href="#manage" aria-controls="manage" role="tab" data-toggle="tab">Manage Event</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -87,19 +87,61 @@
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
     </div>
 
-    <div role="tabpanel" class="tab-pane" id="voter">
-    <button type="button" class="btn btn-default" id="help-voter-edit">
-      <span class="glyphicon glyphicon-question-sign"
-	    aria-hidden="true"
-	    title="Popover title"
-            data-toggle="popover"
-	    data-content="Another popover" >
-      </span> Help
-    </button>
-      <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
-      <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
-      <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
+    <div role="tabpanel" class="tab-pane" id="manage">
+      <button type="button" class="btn btn-default" id="help-voter-edit">
+	<span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
+      </button>
+      <div class="panel-group" id="accordion">
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h4 class="panel-title">
+	      <a data-toggle="collapse" data-parent="#accordion" 
+		href="#collapseOne">
+                Voters
+	      </a>
+	    </h4>
+	  </div>
+	  <div id="collapseOne" class="panel-collapse collapse in">
+	    <div class="panel-body">
+	      <textarea class="form-control" id="voter-text" style="height: 20em">No event selected</textarea>
+	      <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
+	      <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
+	    </div>
+	  </div>
+	</div>
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h4 class="panel-title">
+	      <a data-toggle="collapse" data-parent="#accordion" 
+		href="#collapseTwo">
+                Vote Summary
+	      </a>
+	    </h4>
+	  </div>
+	  <div id="collapseTwo" class="panel-collapse collapse">
+	    <div class="panel-body">
+	      empty
+	    </div>
+	  </div>
+	</div>
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+	    <h4 class="panel-title">
+	      <a data-toggle="collapse" data-parent="#accordion" 
+		href="#collapseThree">
+                Vote Detail
+	      </a>
+	    </h4>
+	  </div>
+	  <div id="collapseThree" class="panel-collapse collapse">
+	    <div class="panel-body">
+	      empty
+	    </div>
+	  </div>
+	</div>
+      </div>
     </div>
+  </div>
 </div>
 
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -217,7 +259,7 @@ function loadEvents() {
         $(".voter-edit").click(function() {
 	    voterEditor.eventId = $(this).attr("data-eventid");
 	    voterEditor.loadVoters();
-	    $('.nav a[href="#voter"]').trigger("click");
+	    $('.nav a[href="#manage"]').trigger("click");
 	});
     })
     .fail(function( jqXHR, textStatus ) {
