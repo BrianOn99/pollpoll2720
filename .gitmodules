@@ -1,0 +1,3 @@
+[submodule "classes/meekrodb.2.3.class.php"]
+	path = classes/meekroDB
+	url = https://github.com/SergeyTsalkov/meekrodb.git
