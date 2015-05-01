@@ -23,12 +23,9 @@
 	//Include head.php for consistent appearance of web application
 	include "../_include/head.php";
 	//Set up paramaters to connect to db
-	$host='localhost';
-	$user="root";
-	$password="";	
-	$db="pollpoll";
+        require_once "../config/db.php";
 	//Attempt connection to database or die with error message for users
-	$con = @mysqli_connect($host,$user,$password,$db) or die('Sorry something went wrong with database connection'); 
+	$con = @mysqli_connect("localhost", DB_USER, DB_PASS, DB_NAME) or die('Sorry something went wrong with database connection'); 
 	
 	//Get voter id from url
 	$voterId = @$_GET['voterId'] or die('No user registered'); 												
