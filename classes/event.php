@@ -124,9 +124,10 @@ class Event_manager extends Event_base
 
                         DB::insert("voter",  array(
                                 "event_id" => $this->e_id,
-                                "key" => hash("sha256", rand()),
+                                "keyVar" => hash("sha256", rand()),
                                 "name" => $v["name"],
-                                "email" => $v["email"]));
+                                "email" => $v["email"],
+                                "voted" => False));
                 }
         }
 
