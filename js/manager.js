@@ -179,13 +179,15 @@ $("document").ready(function() {
          * very complicated, at least need 5 human hours
          */
         var epoch = function(datestr) {
-                var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]){1,2}:([0-9]{2}) (AM|PM)/;
+                var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
                 var t = pattern.exec(datestr);
                 var hour = parseInt(t[4]);
                 if (t[6] == "PM") {
                         hour += 12;
+                } else if (t[6] == "AM" && hour == 12) {
+                        hour = 0;
                 }
-                return new Date(parseInt(t[3]), parseInt(t[1]), parseInt(t[2]),
+                return new Date(parseInt(t[3]), parseInt(t[1])-1, parseInt(t[2]),
                                 hour, parseInt(t[5])).getTime() / 1000;
         }
 
