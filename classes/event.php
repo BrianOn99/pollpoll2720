@@ -127,7 +127,7 @@ class Event_manager extends Event_base
                                 "keyVar" => hash("sha256", rand()),
                                 "name" => $v["name"],
                                 "email" => $v["email"],
-                                "voted" => False));
+                                "voted_choice_id" => NULL));
                 }
         }
 
