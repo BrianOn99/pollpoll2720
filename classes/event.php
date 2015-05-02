@@ -6,7 +6,7 @@ ini_set('display_startup_errors',1);
 error_reporting(-1);
  */
 
-require_once "meekrodb.2.3.class.php";
+require_once "meekroDB/db.class.php";
 require_once "../config/db.php";
 
 DB::$user = DB_USER;
