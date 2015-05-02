@@ -42,7 +42,6 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [X] view result
 
 ## Bug 蟲蟲
-- event time is delayed by 1 month (how strange!)
 - many security problems (I will concentrateon features for now)
 
 ## License
