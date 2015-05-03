@@ -146,18 +146,24 @@ $("document").ready(function() {
             var type1Handler = function(voter) {
                 ret.voters.forEach(function(voter) {
                     var hasVoted = voter.voted ? "yes" : "no";
-                    var newrow = "<tr><td>{0}</td><td>{1}</td></tr>".format(voter.name, hasVoted);
+                    var newrow = "<tr><td>{0}</td><td>{1}</td></tr>"
+                                 .format(voter.name, hasVoted);
                     tbody.append(newrow);
                 });
             };
             var type2Handler = function(voter) {
+                ret.voters.forEach(function(voter) {
+                    var newrow = "<tr><td>{0}</td><td>{1}</td></tr>"
+                                 .format(voter.name, voter.voted_choice_label);
+                    tbody.append(newrow);
+                });
             };
             handlerMap = {1: type1Handler, 2: type2Handler};
             handlerMap[ret.event_type](ret.voter);
         })
         .fail(function( jqXHR, textStatus ) {
             alert(textStatus);
-            console.log( "Request failed: " + textStatus );
+            console.log( "Request failed: " + textStatus.responseText );
         });
     });
 

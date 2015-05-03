@@ -157,16 +157,34 @@ class Event_manager extends Event_base
                         }
                         break;
                 case 2:
+                        $mapping = $this->id2label();
+                        foreach ($ret as &$voter) {
+                                $choice_id = $voter["voted_choice_id"];
+                                $voter["voted_choice_label"] = $choice_id ?
+                                                               $mapping[$choice_id] :
+                                                               NULL;
+                                unset($voter["voted_choice_id"]);
+                        }
+                        break;
                 }
 
                 return $ret;
         }
 
         function id2label() {
+                $ret = DB::query("SELECT choice_id, label FROM choice WHERE event_id=%d",
+                                 $this->e_id);
+                $mapping = [];
+                foreach ($ret as $choice) {
+                        $mapping[$choice["choice_id"]] = $choice["label"];
+                }
+                return $mapping;
         }
 
         function event_type() {
-                $ret = DB::query("SELECT event_type FROM poll_event WHERE event_id=%d", $this->e_id);
+                $ret = DB::queryOneField("event_type",
+                                         "SELECT * FROM poll_event WHERE event_id=%d",
+                                         $this->e_id);
                 return (int)$ret;
         }
         function clear_voters() {}
