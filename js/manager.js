@@ -11,16 +11,39 @@ if (!String.prototype.format) {
     };
 }
 
+var submitChoices = function(eventId) {
+    alert("submit");
+    $(".choice-row-form").each(function() {
+        var file = $(this).find('input[type="file"]')[0].files[0]
+        var fd = new FormData(this);
+        fd.append("afile", file);
+        fd.append("event_id", eventId);
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../ajax/set_choice.php', true);
+        xhr.onload = function() {
+            if (this.status == 200) {
+                //var resp = JSON.parse(this.response);
+                console.log('Server got:', this.response);
+            } else {
+                alert("response" + this.status);
+            }
+        };
+        xhr.send(fd); 
+    });
+};
+
 $("document").ready(function() {
     $("#more-option").click(function() {
         var defaultrow = $(
-                '<tr>' +
-                '<td class="col-md-6">' +
+                '<form class="choice-row-form" style="height: auto">' +
+                '<div class="row">' +
+                '<span class="col-sm-6">' +
                 '<input class="form-control" type="text" name="choice-desc" required />' +
-                '</td>' +
-                '<td class="col-md-6"><form><input type="file" /></form></td>' +
-                '</tr>');
-        $("#option-table > tbody").append(defaultrow);
+                '</span>' +
+                '<span class="col-sm-6"><input type="file" /></span>' +
+                '</div>' +
+                '</form>');
+        $("#choice-list").append(defaultrow);
     });
 
     voterEditor = {
@@ -212,7 +235,7 @@ $("document").ready(function() {
             console.log( "Request failed: " + textStatus );
         });
     }
-    loadEvents();
+    //loadEvents();
 
     $("#addEventForm").submit(function() {
         alert("submit");
@@ -267,6 +290,31 @@ $("document").ready(function() {
         });
         return false;
     });
+
+    var submitChoices = function() {
+        alert("submit");
+        $(".choice-row-form").each(function() {
+            var choiceFormData = new FormData(this);
+            choiceFormdata.append("event_id", 999);
+
+            $.ajax({
+                url: '../ajax/set_choice.php',
+                data: choiceFormData,
+                contentType: false,
+                processData: false,
+                dataType: "text"
+            })
+            .done(function(data) {
+                alert("supload ok response: " + data);
+            })
+            .fail(function( jqXHR, textStatus ) {
+                alert(textStatus);
+                console.log( "Request failed: " + textStatus );
+            });
+
+            return false;
+        });
+    };
 
     $("#voter-submit").click(function() {
         voters_info = $("#voter-text").val();

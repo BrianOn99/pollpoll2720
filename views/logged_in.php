@@ -84,13 +84,16 @@
             });
         </script>
 
-        <table class="table" id="option-table">
-          <caption>Choices</caption>
-          <thead><tr><th class="col-md-6">Description</th> <th class="col-md-6">Image</th></tr></thead>
-          <tbody>
-          </tbody>
-        </table>
+        <div class="table" id="option-table">
+          <h2>Choices</h2>
+          <div id="choice-list">
+            <div class="row"><span class="col-sm-6">Description</span><span class="col-sm-6">Image</span></div>
+          </div>
+        </div>
+        <div>
+        <input type="submit" />
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
+        </div>
     </div>
 
     <div role="tabpanel" class="tab-pane" id="manage">

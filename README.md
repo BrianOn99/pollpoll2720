@@ -20,6 +20,7 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 1. clone / download this repo
 2. change database settings in config/db.php
 3. run the sql statements in \_installation
+4. give "choice_img" directory write permission to other (*chmod o+w*)
 
 ### manager
 - [X] login/logout
