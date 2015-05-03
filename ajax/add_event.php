@@ -6,9 +6,7 @@ session_start();
 
 require_once "../classes/event.php";
 
-print "\nraw:\n";
 $data = json_decode(file_get_contents('php://input'), true);
-print_r($data);
 
 $user = new User(User::name2id($_SESSION["user_name"]));
 $evt = $user->create_event(array(
@@ -18,5 +16,6 @@ $evt = $user->create_event(array(
         "start_time" => $data["start"],
         "end_time" =>  $data["end"]));
 
+echo $evt->e_id;
 ?>
 

@@ -65,7 +65,7 @@ class User
 
 class Event_base
 {
-        protected $e_id;  // event id
+        public $e_id;  // event id
 
         function __construct($e_id)
         {
@@ -93,7 +93,7 @@ class Event_base
 /* it is read as event object for manager, not event manager */
 class Event_manager extends Event_base
 {
-        protected $u_id;
+        public $u_id;
 
         function __construct($u_id, $e_id)
         {

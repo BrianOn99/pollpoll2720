@@ -247,19 +247,10 @@ $("document").ready(function() {
             console.log( "Request failed: " + textStatus );
         });
     }
-    //loadEvents();
+    loadEvents();
 
     $("#addEventForm").submit(function() {
         alert("submit");
-        /*
-         * TODO:
-         * send individual files by ajax first, server give me back a handle id
-         * put this id in a hidden field, to associate it with the option
-         * finally send all data
-         *
-         * this has low priority, because it is additionalfunctionality. And, it is
-         * very complicated, at least need 5 human hours
-         */
         var epoch = function(datestr) {
                 var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
                 var t = pattern.exec(datestr);
@@ -274,18 +265,9 @@ $("document").ready(function() {
         }
 
         var formdata = {};
-        var options = [];
         $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
         formdata["start"] = epoch(formdata["start"]);
         formdata["end"] = epoch(formdata["end"]);
-        var i = $("#option-table input");
-        $('#option-table input[name="choice-desc"]').each(function(i) {
-            var opt = {};
-            opt.desc = $(this).serializeArray()[0].value;
-            opt.img = "not set";
-            options.push(opt);
-        });
-        formdata["options"] = options;
         alert(JSON.stringify(formdata));
 
         $.ajax({
@@ -293,8 +275,10 @@ $("document").ready(function() {
             url: "../ajax/add_event.php",
             data: JSON.stringify(formdata),
             contentType: 'application/json; charset=utf-8',
+            dataType: "text",
             success: function(data) {
                     console.log(data);
+                    submitChoices(parseInt(data));
             },
             error: function ( jqXHR, textStatus ) {
                     console.log( "Request failed: " + textStatus );
@@ -302,31 +286,6 @@ $("document").ready(function() {
         });
         return false;
     });
-
-    var submitChoices = function() {
-        alert("submit");
-        $(".choice-row-form").each(function() {
-            var choiceFormData = new FormData(this);
-            choiceFormdata.append("event_id", 999);
-
-            $.ajax({
-                url: '../ajax/set_choice.php',
-                data: choiceFormData,
-                contentType: false,
-                processData: false,
-                dataType: "text"
-            })
-            .done(function(data) {
-                alert("supload ok response: " + data);
-            })
-            .fail(function( jqXHR, textStatus ) {
-                alert(textStatus);
-                console.log( "Request failed: " + textStatus );
-            });
-
-            return false;
-        });
-    };
 
     $("#voter-submit").click(function() {
         voters_info = $("#voter-text").val();

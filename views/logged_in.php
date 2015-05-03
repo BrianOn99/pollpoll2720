@@ -91,7 +91,6 @@
           </div>
         </div>
         <div>
-        <input type="submit" />
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
         </div>
     </div>
