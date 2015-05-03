@@ -13,23 +13,35 @@ if (!String.prototype.format) {
 
 var submitChoices = function(eventId) {
     alert("submit");
+    var fd = new FormData();
+    fd.append("event_id", eventId);
+    var choicesInfo = {};
+    var choiceLabel = "A";
+    var nextChar = function(c) {
+        return String.fromCharCode(c.charCodeAt(0) + 1); 
+    }
+
     $(".choice-row-form").each(function() {
         var file = $(this).find('input[type="file"]')[0].files[0]
-        var fd = new FormData(this);
-        fd.append("afile", file);
-        fd.append("event_id", eventId);
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../ajax/set_choice.php', true);
-        xhr.onload = function() {
-            if (this.status == 200) {
-                //var resp = JSON.parse(this.response);
-                console.log('Server got:', this.response);
-            } else {
-                alert("response" + this.status);
-            }
-        };
-        xhr.send(fd); 
+        var desc = $(this).find('input[type="text"]').val();
+        fd.append(choiceLabel, file);
+        choicesInfo[choiceLabel] = desc;
+        choiceLabel = nextChar(choiceLabel);
     });
+
+    console.log(JSON.stringify(choicesInfo));
+    fd.append("choices_info", JSON.stringify(choicesInfo));
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '../ajax/set_choice.php', true);
+    xhr.onload = function() {
+        if (this.status == 200) {
+            console.log('Server got:', this.response);
+        } else {
+            alert("response" + this.status);
+        }
+    };
+    xhr.send(fd); 
 };
 
 $("document").ready(function() {

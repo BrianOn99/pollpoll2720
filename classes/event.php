@@ -106,12 +106,12 @@ class Event_manager extends Event_base
                 DB::delete('poll_event', 'event_id=%d', $this->e_id);
         }
 
-        function add_option($opt) {
+        function add_option($label, $desc, $img_dest) {
                 DB::insert("choice", array(
                         "event_id" => $this->e_id,
-                        "label" => $opt["label"],
-                        "image_url" => $opt["img"],
-                        "description" => $opt["desc"],
+                        "label" => $label,
+                        "image_url" => $img_dest,
+                        "description" => $desc,
                         "vote_count" => 0));
         }
 
