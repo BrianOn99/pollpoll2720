@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`poll_event` (
 CREATE TABLE IF NOT EXISTS `pollpoll`.`choice` (
   `choice_id` int PRIMARY KEY AUTO_INCREMENT,
   `event_id` int NOT NULL,
+  `label` char(2) NOT NULL,
   `image_url` varchar(255),
   `description` text,
   `vote_count` int DEFAULT 0,

@@ -109,6 +109,7 @@ class Event_manager extends Event_base
         function add_option($opt) {
                 DB::insert("choice", array(
                         "event_id" => $this->e_id,
+                        "label" => $opt["label"],
                         "image_url" => $opt["img"],
                         "description" => $opt["desc"],
                         "vote_count" => 0));
@@ -159,6 +160,9 @@ class Event_manager extends Event_base
                 }
 
                 return $ret;
+        }
+
+        function id2label() {
         }
 
         function event_type() {

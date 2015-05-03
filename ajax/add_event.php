@@ -18,8 +18,9 @@ $evt = $user->create_event(array(
         "start_time" => $data["start"],
         "end_time" =>  $data["end"]));
 
+$label = "A";
 foreach ($data["options"] as $opt) {
-        echo "999";
+        $opt["label"] = $label++;
         $evt->add_option($opt);
 }
 
