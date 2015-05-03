@@ -126,6 +126,41 @@ $("document").ready(function() {
         });
     });
 
+    $("#get-result-detail").click(function() {
+        if (!voterEditor.eventId) {
+            alert("Loading voters: EventId not set!");
+            return false;
+        }
+
+        $.ajax({
+            method: "POST",
+            url: "../ajax/vote_result_detail.php",
+            dataType: "json",
+            data: {event_id: voterEditor.eventId}
+        })
+        .done(function(ret) {
+            alert(JSON.stringify(ret));
+
+            var tbody = $("#result-table > tbody");
+            tbody.html("");
+            var type1Handler = function(voter) {
+                ret.voters.forEach(function(voter) {
+                    var hasVoted = voter.voted ? "yes" : "no";
+                    var newrow = "<tr><td>{0}</td><td>{1}</td></tr>".format(voter.name, hasVoted);
+                    tbody.append(newrow);
+                });
+            };
+            var type2Handler = function(voter) {
+            };
+            handlerMap = {1: type1Handler, 2: type2Handler};
+            handlerMap[ret.event_type](ret.voter);
+        })
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
+    });
+
     function loadEvents() {
         $.ajax({
             method: "POST",

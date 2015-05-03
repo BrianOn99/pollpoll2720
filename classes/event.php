@@ -131,16 +131,40 @@ class Event_manager extends Event_base
                 }
         }
 
-	function get_voters() {
+        function get_voters() {
                 return DB::query("SELECT name, email FROM voter WHERE event_id=%d",
-				$this->e_id);
-	}
+                                 $this->e_id);
+        }
 
-	function get_result() {
+        function get_result() {
                 return DB::query("SELECT choice_id, description, vote_count FROM choice WHERE event_id=%d",
-				$this->e_id);
-	}
+                                 $this->e_id);
+        }
 
+        function get_result_detail() {
+                $type = $this->event_type();
+                $ret = DB::query("SELECT name, voted_choice_id FROM voter WHERE event_id=%d",
+                                 $this->e_id);
+
+                switch ($type) {
+                case 1:
+                        foreach ($ret as &$voter) {
+                                $voter["voted"] = ($voter["voted_choice_id"] == NULL) ?
+                                                  False :
+                                                  True;
+                                unset($voter["voted_choice_id"]);
+                        }
+                        break;
+                case 2:
+                }
+
+                return $ret;
+        }
+
+        function event_type() {
+                $ret = DB::query("SELECT event_type FROM poll_event WHERE event_id=%d", $this->e_id);
+                return (int)$ret;
+        }
         function clear_voters() {}
         function is_active() {}
         function activate() {}

@@ -156,7 +156,17 @@
           </div>
           <div id="collapseThree" class="panel-collapse collapse">
             <div class="panel-body">
-              empty
+              <button id="get-result-detail">Get result</button>
+              <table class="table table-striped" id="result-table">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Vote</th>
+                  </tr>
+                </thead>
+                <tbody>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
