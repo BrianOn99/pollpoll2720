@@ -27,10 +27,8 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [X] add event
 - [X] list event
 - [X] add options
-  - [ ] option with image
-- [lib only] show options
+  - [X] option with image
 - [ ] sort event
-- [lib only] delete event
 - [ ] activates event
 - [X] edit voters
 - [X] export voters
