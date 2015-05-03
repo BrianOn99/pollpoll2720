@@ -142,8 +142,10 @@ $("document").ready(function() {
             alert(JSON.stringify(ret));
 
             var tbody = $("#result-table > tbody");
+            var theadVoterDesc = $("#voter-desc");
             tbody.html("");
             var type1Handler = function(voter) {
+                theadVoterDesc.text("Voted");
                 ret.voters.forEach(function(voter) {
                     var hasVoted = voter.voted ? "yes" : "no";
                     var newrow = "<tr><td>{0}</td><td>{1}</td></tr>"
@@ -152,7 +154,11 @@ $("document").ready(function() {
                 });
             };
             var type2Handler = function(voter) {
+                theadVoterDesc.text("Vote Casted");
                 ret.voters.forEach(function(voter) {
+                    if (voter.voted_choice_label == null) {
+                        voter.voted_choice_label = "not voted";
+                    }
                     var newrow = "<tr><td>{0}</td><td>{1}</td></tr>"
                                  .format(voter.name, voter.voted_choice_label);
                     tbody.append(newrow);

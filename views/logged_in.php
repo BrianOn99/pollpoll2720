@@ -161,7 +161,7 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>Vote</th>
+                    <th id="voter-desc"></th>
                   </tr>
                 </thead>
                 <tbody>
