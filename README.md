@@ -11,6 +11,7 @@ Some 3rd party libraries are used:
 * Twitter bootstrap -- frontend ui design
 * FileSaver.js -- export voters as file
 * canvasjs -- display vote summary
+* [tablesort](http://tristen.ca/tablesort/demo/) -- sort event table for manager 
 
 ## Installation
 

@@ -208,6 +208,12 @@ $("document").ready(function() {
         });
     });
 
+    function enableEventSort() {
+        new Tablesort(document.getElementById('etable'));
+    }
+
+    enableEventSort();
+
     function loadEvents() {
         $.ajax({
             method: "POST",

@@ -13,6 +13,7 @@
 <script src="https://raw.githubusercontent.com/eligrey/FileSaver.js/master/FileSaver.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/canvasjs/1.4.1/canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tablesort/3.0.2/tablesort.min.js"></script>
 
 <script src="../js/manager.js"></script>
 </head>
