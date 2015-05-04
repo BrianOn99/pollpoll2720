@@ -12,7 +12,8 @@ $event_id = $_REQUEST['event_id'];
 $user = new User(User::name2id($_SESSION["user_name"]));
 $evt = $user->get_eventobj($event_id);
 
-$upload_dir = $_SERVER["DOCUMENT_ROOT"] . "/pollpoll2720/choice_img";
+$img_dir = "/pollpoll2720/choice_img";
+$upload_dir = $_SERVER["DOCUMENT_ROOT"] . $img_dir;
 
 $choices_info = json_decode($_REQUEST['choices_info']);
 
@@ -27,7 +28,7 @@ foreach ($choices_info as $label => $desc) {
         move_uploaded_file($tmp, $img_dest);
         
         echo "$label $desc $img_dest\n";
-        $evt->add_option($label, $desc, $img_dest);
+        $evt->add_option($label, $desc, "$img_dir/$name");
 }
 
 echo print_r($_FILES);

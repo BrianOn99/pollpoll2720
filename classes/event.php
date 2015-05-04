@@ -82,7 +82,7 @@ class Event_base
         }
 
         function get_choices() {
-                return DB::query("SELECT label, description, image_url"
+                return DB::query("SELECT label, description, image_url, choice_id"
                         . " FROM choice WHERE event_id=%d",
                         $this->e_id);
         }
@@ -200,13 +200,14 @@ class Event_manager extends Event_base
 
 class Event_voter extends Event_base
 {
-        function __construct($voter_id, $e_id)
+        function __construct($voter_id)
         {
-                parent::__construct($e_id);
+                $ret = DB::queryOneField("event_id",
+                                         "SELECT * FROM voter WHERE voter_id=%d",
+                                         $voter_id);
+                parent::__construct((int)$ret);
                 $this->voter_id = $voter_id;
         }
-
-        function vote() {}
 }
 
 ?>
