@@ -187,7 +187,11 @@ class Event_manager extends Event_base
                                          $this->e_id);
                 return (int)$ret;
         }
-        function clear_voters() {}
+
+        function clear_voters() {
+                DB::delete('voter', "event_id=%d", $this->e_id);
+        }
+
         function is_active() {}
         function activate() {}
         protected function send_email() {}
