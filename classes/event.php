@@ -81,8 +81,8 @@ class Event_base
                         $this->e_id);
         }
 
-        function get_options() {
-                return DB::query("SELECT choice_id, description, image_url"
+        function get_choices() {
+                return DB::query("SELECT label, description, image_url"
                         . " FROM choice WHERE event_id=%d",
                         $this->e_id);
         }

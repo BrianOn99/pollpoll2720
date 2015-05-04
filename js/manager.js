@@ -45,6 +45,8 @@ var submitChoices = function(eventId) {
 };
 
 $("document").ready(function() {
+    var edittingEventId = null;
+
     $("#more-option").click(function() {
         var defaultrow = $(
                 '<form class="choice-row-form" style="height: auto">' +
@@ -60,14 +62,13 @@ $("document").ready(function() {
 
     voterEditor = {
         elm : $("#voter-text"),
-        eventId : null,
 
         setText: function(text) {
             this.elm.val(text);
         },
 
         loadVoters: function() {
-            if (!this.eventId) {
+            if (!edittingEventId) {
                 alert("Loading voters: EventId not set!");
                 return false;
             }
@@ -78,7 +79,7 @@ $("document").ready(function() {
                 method: "POST",
                 url: "../ajax/get_voters.php",
                 dataType: "json",
-                data: {event_id: this.eventId}
+                data: {event_id: edittingEventId}
             })
             .done(function(voterList) {
                 displayText = "";
@@ -111,9 +112,36 @@ $("document").ready(function() {
         }
     }
 
+    var showChoices = function() {
+        if (!edittingEventId) {
+            alert("getting result: EventId not set!");
+            return false;
+        }
+        $.ajax({
+            type: "POST",
+            url: "../ajax/get_choices.php",
+            dataType: "json",
+            data: {event_id: edittingEventId},
+        })
+        .done(function(response) {
+            var output = "";
+            response.forEach(function(choice) {
+                output += "<p>{0} : {1}</p>".format(choice.label, choice.description);
+            });
+            $("#choices-label").html(output);
+        })
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
+    };
+
+    $("#voter-export").click(function() {
+        voterEditor.exportVoters();
+    });
     $("#get-result").click(function() {
-        if (!voterEditor.eventId) {
-            alert("Loading voters: EventId not set!");
+        if (!edittingEventId) {
+            alert("getting result: EventId not set!");
             return false;
         }
 
@@ -121,7 +149,7 @@ $("document").ready(function() {
             method: "POST",
             url: "../ajax/vote_result.php",
             dataType: "json",
-            data: {event_id: voterEditor.eventId}
+            data: {event_id: edittingEventId}
         })
         .done(function(voterList) {
             alert(JSON.stringify(voterList));
@@ -162,8 +190,8 @@ $("document").ready(function() {
     });
 
     $("#get-result-detail").click(function() {
-        if (!voterEditor.eventId) {
-            alert("Loading voters: EventId not set!");
+        if (!edittingEventId) {
+            alert("getting result detail: EventId not set!");
             return false;
         }
 
@@ -171,7 +199,7 @@ $("document").ready(function() {
             method: "POST",
             url: "../ajax/vote_result_detail.php",
             dataType: "json",
-            data: {event_id: voterEditor.eventId}
+            data: {event_id: edittingEventId}
         })
         .done(function(ret) {
             alert(JSON.stringify(ret));
@@ -222,7 +250,8 @@ $("document").ready(function() {
         })
         .done(function(eventList) {
             console.log(JSON.stringify(eventList));
-            var tbody = $("#etable");
+            var tbody = $("#etable tbody");
+            tbody.html("");
             eventList.forEach(function(e) {
                 var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
                     '<td><button type="button" class="btn btn-default btn-sm voter-edit" data-eventid="{4}">' +
@@ -243,8 +272,10 @@ $("document").ready(function() {
             });
 
             $(".voter-edit").click(function() {
-                voterEditor.eventId = $(this).attr("data-eventid");
+                edittingEventId = $(this).attr("data-eventid");
                 voterEditor.loadVoters();
+                showChoices();
+                $("#event-manage-tab").removeClass('hidden');
                 $('.nav a[href="#manage"]').trigger("click");
             });
         })
@@ -285,6 +316,7 @@ $("document").ready(function() {
             success: function(data) {
                     console.log(data);
                     submitChoices(parseInt(data));
+                    loadEvents();
             },
             error: function ( jqXHR, textStatus ) {
                     console.log( "Request failed: " + textStatus );
@@ -296,7 +328,7 @@ $("document").ready(function() {
     $("#voter-submit").click(function() {
         voters_info = $("#voter-text").val();
         vdata = {};
-        vdata.event_id = voterEditor.eventId;
+        vdata.event_id = edittingEventId;
         vdata.voters = voters_info.split("\n").map(function(row) {
             r = row.split(/, +/);
             return { name: r[0], email: r[1] };

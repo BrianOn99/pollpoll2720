@@ -8,7 +8,7 @@
   <ul class="nav nav-tabs" role="tablist">
     <li role="presentation" class="active"><a href="#list" aria-controls="list" role="tab" data-toggle="tab">Show</a></li>
     <li role="presentation"><a href="#add" aria-controls="add" role="tab" data-toggle="tab">Add</a></li>
-    <li role="presentation"><a href="#manage" aria-controls="manage" role="tab" data-toggle="tab">Manage Event</a></li>
+    <li role="presentation" class="hidden" id="event-manage-tab"><a href="#manage" aria-controls="manage" role="tab" data-toggle="tab">Manage Event</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -25,7 +25,7 @@
             <th>Description</th>
             <th>Start</th>
             <th>End</th>
-            <th>voters</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -96,15 +96,17 @@
     </div>
 
     <div role="tabpanel" class="tab-pane" id="manage">
-      <button type="button" class="btn btn-default" id="help-voter-edit">
-        <span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
-      </button>
 
       <!--
       event management interface
       Okay, the nested div is quite horrifying
       I copy them from http://www.tutorialspoint.com/bootstrap/bootstrap_collapse_plugin.htm
       -->
+
+      <h3>Choices</h3>
+      <div id="choices-label">
+      </div>
+
       <div class="panel-group" id="accordion">
 
         <!-- voter editor -->
@@ -119,6 +121,9 @@
           </div>
           <div id="collapseOne" class="panel-collapse collapse in">
             <div class="panel-body">
+              <button type="button" class="btn btn-default" id="help-voter-edit">
+                <span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
+              </button>
               <textarea class="form-control" id="voter-text" style="height: 20em">
               No event selected
               </textarea>
