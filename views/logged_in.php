@@ -26,6 +26,7 @@
             <th>Start</th>
             <th>End</th>
             <th>Details</th>
+            <th>Activates</th>
           </tr>
         </thead>
         <tbody>

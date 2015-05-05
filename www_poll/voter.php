@@ -40,7 +40,7 @@ function voting_page($voter_id, $key)
         //We use a hidden field to send voterId - we do this instead of using
         //sessions to allow multiple voters at once on one machine
         ?>
-        <form action="submit_vote.php" method="post">
+        <form action="/pollpoll2720/www_poll/submit_vote.php" method="post">
         <input type='hidden' name='voter_id' value=<?=$voter_id?> />
         <input type='hidden' name='key' value=<?=$key?> />
         <div>

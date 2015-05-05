@@ -191,9 +191,25 @@ class Event_manager extends Event_base
                 DB::delete('voter', "event_id=%d", $this->e_id);
         }
 
-        function is_active() {}
-        function activate() {}
-        protected function send_email() {}
+        function activate()
+        {
+                DB::update("poll_event", ["activated" => True], "event_id=%d", $this->e_id);
+                return $this->send_email();
+        }
+
+        function send_email() {
+                $ret = DB::query("SELECT voter_id, keyVar, email FROM voter WHERE event_id=%d",
+                                 $this->e_id);
+                $host = $_SERVER['SERVER_NAME'];
+                $page = "$host/pollpoll2720/www_poll/voter.php";
+                $output ="";
+                foreach ($ret as $voter) {
+                        $param = "?voterId={$voter['voter_id']}&key={$voter['keyVar']}";
+                        $output = $output . "$page$param\n";
+                }
+                return $output;
+        }
+
         function update_voters() {}
 }
 

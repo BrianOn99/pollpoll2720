@@ -112,6 +112,24 @@ $("document").ready(function() {
         }
     }
 
+    var activate = function(eventId) {
+        $.ajax({
+            type: "POST",
+            url: "../ajax/activate.php",
+            dataType: "text",
+            data: {event_id: eventId},
+        })
+        .done(function(response) {
+            alert(response);
+            console.log(response);
+            loadEvents();
+        })
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
+    };
+
     var showChoices = function() {
         if (!edittingEventId) {
             alert("getting result: EventId not set!");
@@ -215,9 +233,20 @@ $("document").ready(function() {
                 var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
                     '<td><button type="button" class="btn btn-default btn-sm voter-edit" data-eventid="{4}">' +
                     '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
-                    '</button></td></tr>').format(
+                    '</button></td>').format(
                         e.title, e.description, e.start_time, e.end_time, e.event_id);
-                tbody.append(newrow);
+                if (!parseInt(e.activated)) {
+                    newrow += '<td><button class="activate">Go</button></td>';
+                } else {
+                    newrow += "<td>Active</td>";
+                }
+                newrow += "</tr>";
+                newrowElm = $(newrow);
+                newrowElm.find(".activate").click(function() {
+                    activate(e.event_id);
+                });
+
+                tbody.append(newrowElm);
 
                 /*
                  * when the edit button clicked, load voters and switch to voter

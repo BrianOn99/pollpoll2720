@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `pollpoll`.`poll_event` (
   `event_type` tinyint NOT NULL,
   `start_time` timestamp NOT NULL,
   `end_time` timestamp NOT NULL,
+  `activated` bool DEFAULT FALSE,
   PRIMARY KEY (`event_id`),
   CONSTRAINT `fk_user_id`
     FOREIGN KEY (user_id) REFERENCES `pollpoll`.`users` (user_id)
