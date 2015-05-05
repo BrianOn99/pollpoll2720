@@ -87,7 +87,10 @@ class Event_base
                         $this->e_id);
         }
 
-        function get_result() {}
+        function get_result() {
+                return DB::query("SELECT choice_id, description, vote_count FROM choice WHERE event_id=%d",
+                                 $this->e_id);
+        }
 }
 
 /* it is read as event object for manager, not event manager */
@@ -134,11 +137,6 @@ class Event_manager extends Event_base
 
         function get_voters() {
                 return DB::query("SELECT name, email FROM voter WHERE event_id=%d",
-                                 $this->e_id);
-        }
-
-        function get_result() {
-                return DB::query("SELECT choice_id, description, vote_count FROM choice WHERE event_id=%d",
                                  $this->e_id);
         }
 

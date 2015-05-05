@@ -1,35 +1,9 @@
 <html>
-<!--Styling is determined here-->
-<style>
-        
-        li
-        {
-                height: 150px;
-                border: 2px inset black;
-                padding: 5px;        
-                vertical-align: middle;
-                list-style-type: none; 
-                font-weight: bold;
-        }
-        .count
-        {
-                position: absolute;
-                right: 10px;
-                font-weight: normal;
-        }
-        
-</style>
 
 <?php
-include "../_include/head.php";
+include "../_include/voter_head.php";
 
-require_once "../classes/meekroDB/db.class.php";
 require_once "../classes/event.php";
-require_once "../config/db.php";
- 
-DB::$user = DB_USER;
-DB::$password = DB_PASS;
-DB::$dbName = DB_NAME;
 
 //Get voter id from url
 $voter_id = @$_GET['voterId'] or die('Invalid URL');
@@ -51,61 +25,93 @@ $poll = DB::queryFirstRow("SELECT * FROM poll_event WHERE event_id=%d", $eventId
 $pollTitle = $poll['title'];
 $pollDescr = $poll['description'];
 $pollType = $poll['event_type'];
-$pollStart = $poll['start_time'];
-$pollEnd = $poll['end_time'];
+$poll_start = $poll['start_time'];
+$poll_end = $poll['end_time'];
+$is_active = 1;
 
 
-//Dynamically start building page 
-?>
-
-<body>
-<h1>Thank you, <?=$voterName?> for visiting poll: <?=$pollTitle?></h1>;
-<p> You have from <?=$pollStart?> until <?=$pollEnd?> to cast your vote </p>;
-<h2><?=$pollDescr?></h2>;
-
-<?php
-//Check if poll is still running and if voter has not yet voted 
-$time = strtotime($pollEnd);
-$curtime = time();
-
-if(($curtime-$time) < 0 AND !$voted)
+function voting_page($voter_id)
 {
         $my_event = new Event_voter($voter_id);
 
         $choices = $my_event->get_choices();
 
         //Start building form
-        echo "<form action='submitVote.php' method='post'>";
         //We use a hidden field to send voterId - we do this instead of using
         //sessions to allow multiple voters at once on one machine
-
-        //While there are more choices, loop
-?>
+        ?>
+        <form action="submitVote.php" method="post">
         <div>
-<?php
+        <?php
         foreach($choices as $row)
         {
-                $img_elm = ($row["image_url"]==NULL) ? "" : "<img src=\"{$row['image_url']}\" width='100' />"; 
+                $img_elm = ($row["image_url"]==NULL) ? "" :
+                        "<img src=\"{$row['image_url']}\" class=\"choice\"/>"; 
                 $input_elm = '<input type="radio" name="choiceId" class="choice"' . " data-value={$row['choice_id']} />";
-?>
-  <div class="col-lg-6">
-    <div class="input-group">
-      <span class="input-group-addon">
-       <?=$input_elm?>
-      </span>
-      <p><?=$row['description']?></p><?=$img_elm?>
-    </div><!-- /input-group -->
-  </div><!-- /.col-lg-6 -->
-<?php
+                ?>
+                <div class="col-lg-6">
+                  <div class="input-group">
+                    <span class="input-group-addon">
+                     <?=$input_elm?>
+                    </span>
+                    <p><?=$row['description']?></p><?=$img_elm?>
+                  </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+                <?php
         }
-        echo '<input type="submit" value="Vote"></form>';
-        echo '</div>';
+        ?>
+        <input type="submit" value="Vote"></form>
+        </div>
+        <?php
 }
-else //This means voter had voted or event is over
-{
-        echo "do ajax";
+
+function show_result($event_id, $voter_id, $key) {
+        ?>
+        <div id="graph"></div>
+        <script src="../js/render_result.js"></script>
+        <script>
+        renderResult("graph", <?=$event_id?>, <?=$voter_id?>, "<?=$key?>");;
+        </script>
+        <?php
 }
 ?>
+
+<?php
+//Dynamically start building page 
+?>
+
+<body>
+<div class="container">
+<h1>Thank you, <?=$voterName?> for visiting poll: <?=$pollTitle?></h1>
+<h2><?=$pollDescr?></h2>
+
+<?php
+//Check if poll is still running and if voter has not yet voted 
+$end_time = strtotime($poll_end);
+$start_time = strtotime($poll_start);
+$curtime = time();
+
+$has_started = ($curtime-$start_time) > 0;
+$has_ended = ($curtime-$end_time) > 0;
+
+if (!($has_started && $is_active)) {
+        echo "Not yet votable";
+} elseif ($has_ended) {
+        show_result($eventId, $voter_id, $key);
+} elseif (!$voted) {
+        echo "<p> You have from $poll_start until $poll_end to cast your vote </p>";
+        voting_page($voter_id);
+} else {
+        if ($pollType == "1") {
+                echo "Come back to see result when the event has ended";
+        } elseif ($pollType == "2") {
+                show_result($eventId, $voter_id, $key);
+        }
+        
+}
+?>
+
+</div>
 </body>
 </html>
 
