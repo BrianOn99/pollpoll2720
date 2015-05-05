@@ -12,6 +12,7 @@ require_once "../config/db.php";
 DB::$user = DB_USER;
 DB::$password = DB_PASS;
 DB::$dbName = DB_NAME;
+//DB::debugMode();
 
 date_default_timezone_set('Asia/Hong_Kong');
 
@@ -205,6 +206,20 @@ class Event_voter extends Event_base
                                          $voter_id);
                 parent::__construct((int)$ret);
                 $this->voter_id = $voter_id;
+        }
+
+        function vote($choice_id) {
+                DB::startTransaction();
+                DB::query("UPDATE choice SET vote_count=vote_count+1 WHERE choice_id=%d", $choice_id);
+                $counter1 = DB::affectedRows();
+                DB::query("UPDATE voter SET voted_choice_id=%d WHERE voter_id=%d", $choice_id, $this->voter_id);
+                $counter2 = DB::affectedRows();
+                if ($counter1 == 1 && $counter2 == 1) {
+                            DB::commit();
+                } else {
+                            exit("voting error");
+                            DB::rollback();
+                }
         }
 }
 

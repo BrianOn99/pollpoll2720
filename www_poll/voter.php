@@ -30,7 +30,7 @@ $poll_end = $poll['end_time'];
 $is_active = 1;
 
 
-function voting_page($voter_id)
+function voting_page($voter_id, $key)
 {
         $my_event = new Event_voter($voter_id);
 
@@ -40,14 +40,16 @@ function voting_page($voter_id)
         //We use a hidden field to send voterId - we do this instead of using
         //sessions to allow multiple voters at once on one machine
         ?>
-        <form action="submitVote.php" method="post">
+        <form action="submit_vote.php" method="post">
+        <input type='hidden' name='voter_id' value=<?=$voter_id?> />
+        <input type='hidden' name='key' value=<?=$key?> />
         <div>
         <?php
         foreach($choices as $row)
         {
                 $img_elm = ($row["image_url"]==NULL) ? "" :
                         "<img src=\"{$row['image_url']}\" class=\"choice\"/>"; 
-                $input_elm = '<input type="radio" name="choiceId" class="choice"' . " data-value={$row['choice_id']} />";
+                $input_elm = '<input type="radio" name="choice_id" class="choice"' . " value={$row['choice_id']} />";
                 ?>
                 <div class="col-lg-6">
                   <div class="input-group">
@@ -100,7 +102,7 @@ if (!($has_started && $is_active)) {
         show_result($eventId, $voter_id, $key);
 } elseif (!$voted) {
         echo "<p> You have from $poll_start until $poll_end to cast your vote </p>";
-        voting_page($voter_id);
+        voting_page($voter_id, $key);
 } else {
         if ($pollType == "1") {
                 echo "Come back to see result when the event has ended";
