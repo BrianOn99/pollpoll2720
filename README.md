@@ -29,8 +29,8 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [X] list event
 - [X] add options
   - [X] option with image
-- [ ] sort event
-- [ ] activates event
+- [X] sort event
+- [X] activates event
 - [X] edit voters
 - [X] export voters
 - [X] import voters
@@ -42,7 +42,7 @@ Change mySQL database user and password in `config/db.php` (*DB_USER* and *DB_PA
 - [X] view result
 
 ## Bug 蟲蟲
-- many security problems (I will concentrateon features for now)
+- many security problems
 
 ## License
 

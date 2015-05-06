@@ -314,13 +314,20 @@ $("document").ready(function() {
     });
 
     $("#voter-submit").click(function() {
+        var pattern = /^([a-z ]+),[ ]*([a-z_1-9]+@[a-z1-9.]+)$/i;
+
         voters_info = $("#voter-text").val();
         vdata = {};
         vdata.event_id = edittingEventId;
         vdata.voters = voters_info.split("\n").map(function(row) {
-            r = row.split(/, +/);
-            return { name: r[0], email: r[1] };
+            var res = pattern.exec(row);
+            if (!res) {
+                alert("incorrect voter info");
+                throw "incorrect voter info";
+            }
+            return { name: res[1], email: res[2] };
         });
+        alert("Correct Voter format");
         console.log(JSON.stringify(vdata));
         $.ajax({
             type: "POST",

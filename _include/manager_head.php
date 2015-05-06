@@ -17,4 +17,5 @@
 
 <script src="../js/render_result.js"></script>
 <script src="../js/manager.js"></script>
+
 </head>

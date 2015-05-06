@@ -54,14 +54,17 @@
         <div class="form-group">
           <label for="event-type" class="col-sm-2 control-label">Type</label>
           <div class="col-sm-10">
-            <input id="event-type" class="form-control" type="text" name="type" required />
+            <select id="event-type" class="form-control" name="type" required />
+              <option>1</option>
+              <option>1</option>
+            </select>
           </div>
         </div>
 
         <div class="form-group">
           <label for="event-start" class="col-sm-2 control-label">Start Time</label>
           <div class='input-group date col-sm-10'>
-            <input id="event-start" type='text' class="form-control" name="start" required />
+            <input id="event-start" class="form-control" type="text" name="start" required />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -70,7 +73,7 @@
         <div class="form-group">
           <label for="event-end" class="col-sm-2 control-label">End Time</label>
           <div class='input-group date col-sm-10'>
-            <input id="event-end" type='text' class="form-control" name="end" required />
+            <input id="event-end" class="form-control" type="text" name="end" required />
             <span class="input-group-addon">
               <span class="glyphicon glyphicon-calendar"></span>
             </span>
@@ -126,7 +129,6 @@
                 <span class="glyphicon glyphicon-question-sign" aria-hidden="true"> </span> Help
               </button>
               <textarea class="form-control" id="voter-text" style="height: 20em">
-              No event selected
               </textarea>
               <button type="button" class="btn btn-primary" id="voter-submit">commit</button>
               <button type="button" class="btn btn-primary" id="voter-export">export csv</button>
