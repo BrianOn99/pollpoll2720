@@ -42,7 +42,6 @@ foreach ($choices_info as $label => $desc) {
                 $local_img_dest = NULL;
         }
         
-        echo "$label $desc $img_dest\n";
         $evt->add_option($label, htmlspecialchars($desc), $local_img_dest);
 }
 

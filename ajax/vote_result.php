@@ -1,7 +1,8 @@
 <?php
-ini_set('display_errors',1);
-ini_set('display_startup_errors',1);
-error_reporting(-1);
+/*
+ * This return the vote count for an event
+ * It may be used by voter or manager
+ */
 
 require_once "../classes/event.php";
 $event_id = $_POST["event_id"];
