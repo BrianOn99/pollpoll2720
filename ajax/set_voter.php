@@ -14,6 +14,10 @@ print_r($data);
 $user = new User(User::name2id($_SESSION["user_name"]));
 $evt = $user->get_eventobj($data["event_id"]);  // php will convert it to int
 
+if ($evt->started()) {
+    exit("event has started, cannot set voter");
+}
+
 $evt-> set_voters($data["voters"]);
 
 ?>

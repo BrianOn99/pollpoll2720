@@ -92,6 +92,11 @@ class Event_base
                 return DB::query("SELECT choice_id, description, vote_count FROM choice WHERE event_id=%d",
                                  $this->e_id);
         }
+
+        function started() {
+                $start_time = $this->info()["start_time"];
+                return $start_time < time();
+        }
 }
 
 /* it is read as event object for manager, not event manager */
