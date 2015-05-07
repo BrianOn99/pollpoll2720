@@ -121,12 +121,9 @@ class Event_manager extends Event_base
 
         function set_voters($voters) {
                 $this->clear_voters();
-                foreach ($voters as $v) {
-                        /* seed the random number generater, so the key cannot 
-                         * be guessed. key related part should be moved to 
-                         * acitvate method */
-                        srand(time());
 
+                srand(time());
+                foreach ($voters as $v) {
                         DB::insert("voter",  array(
                                 "event_id" => $this->e_id,
                                 "keyVar" => hash("sha256", rand()),
