@@ -79,14 +79,6 @@
             </span>
           </div>
         </div>
-        <input type="submit"  name="submit" value="Submit" />
-      </form>
-
-        <script type="text/javascript">
-            $(function () {
-                $('.date').datetimepicker();
-            });
-        </script>
 
         <div class="table" id="option-table">
           <h2>Choices</h2>
@@ -97,6 +89,16 @@
         <div>
         <button type="button" class="btn btn-primary" id="more-option">add more option</button>
         </div>
+
+        <input type="submit"  name="submit" value="Submit" />
+      </form>
+
+        <script type="text/javascript">
+            $(function () {
+                $('.date').datetimepicker();
+            });
+        </script>
+
     </div>
 
     <div role="tabpanel" class="tab-pane" id="manage">

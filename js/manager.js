@@ -11,14 +11,27 @@ if (!String.prototype.format) {
     };
 }
 
+var epoch = function(datestr) {
+    var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
+    var t = pattern.exec(datestr);
+    var hour = parseInt(t[4]);
+    if (t[6] == "PM") {
+        hour += 12;
+    } else if (t[6] == "AM" && hour == 12) {
+        hour = 0;
+    }
+    return new Date(parseInt(t[3]), parseInt(t[1])-1, parseInt(t[2]),
+                    hour, parseInt(t[5])).getTime() / 1000;
+}
+
 $("document").ready(function() {
     /* "show" tab */
     var activate = function(eventId) {
         $.ajax({
             type: "POST",
-            url: "../ajax/activate.php",
-            dataType: "text",
-            data: {event_id: eventId},
+        url: "../ajax/activate.php",
+        dataType: "text",
+        data: {event_id: eventId},
         })
         .done(function(response) {
             alert(response);
@@ -91,21 +104,10 @@ $("document").ready(function() {
     /*
      * "add" tab
      */
+
+    /*
     $("#addEventForm").submit(function() {
         alert("submit");
-        var epoch = function(datestr) {
-                var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
-                var t = pattern.exec(datestr);
-                var hour = parseInt(t[4]);
-                if (t[6] == "PM") {
-                        hour += 12;
-                } else if (t[6] == "AM" && hour == 12) {
-                        hour = 0;
-                }
-                return new Date(parseInt(t[3]), parseInt(t[1])-1, parseInt(t[2]),
-                                hour, parseInt(t[5])).getTime() / 1000;
-        }
-
         var formdata = {};
         $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
         formdata["start"] = epoch(formdata["start"]);
@@ -129,18 +131,34 @@ $("document").ready(function() {
         });
         return false;
     });
+    */
 
-    var submitChoices = function(eventId) {
+    var collectMetaData = function() {
+        alert("collecting question");
+        var formdata = {};
+        $("#addEventForm").serializeArray().forEach(function(x){
+            if (x.name != "choice-desc") {
+                formdata[x.name] = x.value;
+            }
+        });
+        formdata["start"] = epoch(formdata["start"]);
+        formdata["end"] = epoch(formdata["end"]);
+        
+        alert(JSON.stringify(formdata));
+        return formdata;
+    };
+
+    $("#addEventForm").submit(function() {
         alert("submit");
         var fd = new FormData();
-        fd.append("event_id", eventId);
+        fd.append("metadata", JSON.stringify(collectMetaData()));
         var choicesInfo = {};
         var choiceLabel = "A";
         var nextChar = function(c) {
             return String.fromCharCode(c.charCodeAt(0) + 1); 
         }
 
-        $(".choice-row-form").each(function() {
+        $(".choice-row").each(function() {
             var file = $(this).find('input[type="file"]')[0].files[0]
             var desc = $(this).find('input[type="text"]').val();
             fd.append(choiceLabel, file);
@@ -152,16 +170,18 @@ $("document").ready(function() {
         fd.append("choices_info", JSON.stringify(choicesInfo));
 
         var xhr = new XMLHttpRequest();
-        xhr.open('POST', '../ajax/set_choice.php', true);
+        xhr.open('POST', '../ajax/add_event.php', true);
         xhr.onload = function() {
             if (this.status == 200) {
-                console.log('Server got:', this.response);
+                console.log('Server got:'+ this.response);
             } else {
-                alert("response" + this.status);
+                alert("Error submit:" + this.status);
             }
         };
         xhr.send(fd); 
-    };
+
+        return false;
+    });
 
     /*
      * "manage" tab
@@ -170,14 +190,13 @@ $("document").ready(function() {
 
     $("#more-option").click(function() {
         var defaultrow = $(
-                '<form class="choice-row-form" style="height: auto">' +
-                '<div class="row">' +
+                '<div class="row choice-row">' +
                 '<span class="col-sm-6">' +
                 '<input class="form-control" type="text" name="choice-desc" required />' +
                 '</span>' +
                 '<span class="col-sm-6"><input type="file" /></span>' +
-                '</div>' +
-                '</form>');
+                '</div>'
+                );
         $("#choice-list").append(defaultrow);
     });
 
