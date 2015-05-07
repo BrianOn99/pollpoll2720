@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -15,17 +16,18 @@
   <body>
     <div class="wrapper">
       <header>
-        <h1>Pollpoll2720</h1>
-        <p>Poling website</p>
-
-        <p class="view"><a href="https://github.com/BrianOn99/pollpoll2720">View the Project on GitHub <small>BrianOn99/pollpoll2720</small></a></p>
-
+        <h1 class="header">Pollpoll2720</h1>
+        <p class="header">Poling website</p>
 
         <ul>
-          <li><a href="https://github.com/BrianOn99/pollpoll2720/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/BrianOn99/pollpoll2720/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/BrianOn99/pollpoll2720">View On <strong>GitHub</strong></a></li>
+          <li class="download"><a class="buttons" href="https://github.com/BrianOn99/pollpoll2720/zipball/master">Download ZIP</a></li>
+          <li class="download"><a class="buttons" href="https://github.com/BrianOn99/pollpoll2720/tarball/master">Download TAR</a></li>
+          <li><a class="buttons github" href="https://github.com/BrianOn99/pollpoll2720">View On GitHub</a></li>
         </ul>
+
+        <p class="header">This project is maintained by <a class="header name" href="https://github.com/BrianOn99">BrianOn99</a></p>
+
+
       </header>
       <section>
         <h1>
@@ -37,6 +39,18 @@
 <p>A php/mariadb/html5 website support polling</p>
 
 <h2>
+<a id="requirements" class="anchor" href="#requirements" aria-hidden="true"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>It is only tested on:</p>
+
+<ul>
+<li>php5.5.9, may not work for php&lt;5.4</li>
+<li>arch/ubuntu linux</li>
+<li>apache/nginx</li>
+<li>firefox&gt;36/chrome&gt;40</li>
+</ul>
+
+<h2>
 <a id="credits" class="anchor" href="#credits" aria-hidden="true"><span class="octicon octicon-link"></span></a>CREDITS</h2>
 
 <p>Some 3rd party libraries are used:</p>
@@ -45,20 +59,24 @@
 <li>The PHP Login Project -- handling login/logout</li>
 <li>MeekroDB -- prevent sql injection and neat code</li>
 <li>Twitter bootstrap -- frontend ui design</li>
-<li>FileSaver.js -- export voters as file</li>
+<li>
+<a href="https://github.com/eligrey/FileSaver.js/">FileSaver.js</a> -- export voters as file</li>
 <li>canvasjs -- display vote summary</li>
+<li>
+<a href="http://tristen.ca/tablesort/demo/">tablesort</a> -- sort event table for manager </li>
 </ul>
 
 <h2>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
 
 <p>Create a database and tables via the SQL statements in the <code>_install</code> folder.
-Change mySQL database user and password in <code>config/db.php</code> (<em>DB_USER</em> and <em>DB_PASS</em>).</p>
+Change mySQL database user and password in <code>config/db.php</code> (<code>DB_USER</code> and <code>DB_PASS</code>).</p>
 
 <ol>
 <li>clone / download this repo</li>
 <li>change database settings in config/db.php</li>
 <li>run the sql statements in _installation</li>
+<li>give "choice_img" directory write permission web server (apache/nginx, etc)</li>
 </ol>
 
 <h3>
@@ -71,13 +89,11 @@ Change mySQL database user and password in <code>config/db.php</code> (<em>DB_US
 <li>[X] add options
 
 <ul>
-<li>[ ] option with image</li>
+<li>[X] option with image</li>
 </ul>
 </li>
-<li>[lib only] show options</li>
-<li>[ ] sort event</li>
-<li>[lib only] delete event</li>
-<li>[ ] activates event</li>
+<li>[X] sort event</li>
+<li>[X] activates event</li>
 <li>[X] edit voters</li>
 <li>[X] export voters</li>
 <li>[X] import voters</li>
@@ -97,8 +113,7 @@ Change mySQL database user and password in <code>config/db.php</code> (<em>DB_US
 <a id="bug-蟲蟲" class="anchor" href="#bug-%E8%9F%B2%E8%9F%B2" aria-hidden="true"><span class="octicon octicon-link"></span></a>Bug 蟲蟲</h2>
 
 <ul>
-<li>event time is delayed by 1 month (how strange!)</li>
-<li>many security problems (I will concentrateon features for now)</li>
+<li>many security problems</li>
 </ul>
 
 <h2>
@@ -108,12 +123,11 @@ Change mySQL database user and password in <code>config/db.php</code> (<em>DB_US
 You can use this script for free for any private or commercial projects.</p>
       </section>
       <footer>
-        <p>This project is maintained by <a href="https://github.com/BrianOn99">BrianOn99</a></p>
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+        <p><small>Hosted on <a href="https://pages.github.com">GitHub Pages</a> using the Dinky theme</small></p>
       </footer>
     </div>
-    <script src="javascripts/scale.fix.js"></script>
-              <script type="text/javascript">
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+		          <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
