@@ -51,12 +51,12 @@ function voting_page($voter_id, $key)
                         "<img src=\"{$row['image_url']}\" class=\"choice\"/>"; 
                 $input_elm = '<input type="radio" name="choice_id" class="choice"' . " value={$row['choice_id']} />";
                 ?>
-                <div class="col-lg-6">
+                <div>
                   <div class="input-group">
                     <span class="input-group-addon">
                      <?=$input_elm?>
                     </span>
-                    <p><?=$row['description']?></p><?=$img_elm?>
+                    <h4><?=$row['description']?></h4><?=$img_elm?>
                   </div><!-- /input-group -->
                 </div><!-- /.col-lg-6 -->
                 <?php
