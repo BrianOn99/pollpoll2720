@@ -11,40 +11,161 @@ if (!String.prototype.format) {
     };
 }
 
-var submitChoices = function(eventId) {
-    alert("submit");
-    var fd = new FormData();
-    fd.append("event_id", eventId);
-    var choicesInfo = {};
-    var choiceLabel = "A";
-    var nextChar = function(c) {
-        return String.fromCharCode(c.charCodeAt(0) + 1); 
+$("document").ready(function() {
+    /* "show" tab */
+    var activate = function(eventId) {
+        $.ajax({
+            type: "POST",
+            url: "../ajax/activate.php",
+            dataType: "text",
+            data: {event_id: eventId},
+        })
+        .done(function(response) {
+            alert(response);
+            console.log(response);
+            loadEvents();
+        })
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
+    };
+
+    function loadEvents() {
+        $.ajax({
+            method: "POST",
+            url: "../ajax/events.php",
+            dataType: "json"
+        })
+        .done(function(eventList) {
+            console.log(JSON.stringify(eventList));
+            var tbody = $("#etable tbody");
+            tbody.html("");
+            eventList.forEach(function(e) {
+                var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
+                    '<td><button type="button" class="btn btn-default btn-sm voter-edit" data-eventid="{4}">' +
+                    '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
+                    '</button></td>').format(
+                        e.title, e.description, e.start_time, e.end_time, e.event_id);
+                if (!parseInt(e.activated)) {
+                    newrow += '<td><button class="activate">Go</button></td>';
+                } else {
+                    newrow += "<td>Active</td>";
+                }
+                newrow += "</tr>";
+                newrowElm = $(newrow);
+                newrowElm.find(".activate").click(function() {
+                    activate(e.event_id);
+                });
+
+                /*
+                 * when the edit button clicked, load voters and switch to voter
+                 * tab.
+                 * Previously it put this at the bottom of this file, and had a
+                 * weird bug: sometimes the clisk event is registerd, sometimes
+                 * not.  Guess what? I forget ajax is asynchronous. The button
+                 * still not exist sometimes.  Now I know why concurency program is
+                 * hard to develop  :-(
+                 */
+                newrowElm.find(".voter-edit").click(function() {
+                    edittingEventId = e.event_id;
+                    voterEditor.loadVoters();
+                    showChoices();
+                    $("#event-manage-tab").removeClass('hidden');
+                    $('.nav a[href="#manage"]').trigger("click");
+                });
+
+                tbody.append(newrowElm);
+            });
+        })
+        .fail(function( jqXHR, textStatus ) {
+            alert(textStatus);
+            console.log( "Request failed: " + textStatus );
+        });
     }
 
-    $(".choice-row-form").each(function() {
-        var file = $(this).find('input[type="file"]')[0].files[0]
-        var desc = $(this).find('input[type="text"]').val();
-        fd.append(choiceLabel, file);
-        choicesInfo[choiceLabel] = desc;
-        choiceLabel = nextChar(choiceLabel);
+    function enableEventSort() {
+        new Tablesort(document.getElementById('etable'));
+    }
+
+    /*
+     * "add" tab
+     */
+    $("#addEventForm").submit(function() {
+        alert("submit");
+        var epoch = function(datestr) {
+                var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
+                var t = pattern.exec(datestr);
+                var hour = parseInt(t[4]);
+                if (t[6] == "PM") {
+                        hour += 12;
+                } else if (t[6] == "AM" && hour == 12) {
+                        hour = 0;
+                }
+                return new Date(parseInt(t[3]), parseInt(t[1])-1, parseInt(t[2]),
+                                hour, parseInt(t[5])).getTime() / 1000;
+        }
+
+        var formdata = {};
+        $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
+        formdata["start"] = epoch(formdata["start"]);
+        formdata["end"] = epoch(formdata["end"]);
+        alert(JSON.stringify(formdata));
+
+        $.ajax({
+            type: "POST",
+            url: "../ajax/add_event.php",
+            data: JSON.stringify(formdata),
+            contentType: 'application/json; charset=utf-8',
+            dataType: "text",
+            success: function(data) {
+                    console.log(data);
+                    submitChoices(parseInt(data));
+                    loadEvents();
+            },
+            error: function ( jqXHR, textStatus ) {
+                    console.log( "Request failed: " + textStatus );
+            }
+        });
+        return false;
     });
 
-    console.log(JSON.stringify(choicesInfo));
-    fd.append("choices_info", JSON.stringify(choicesInfo));
-
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '../ajax/set_choice.php', true);
-    xhr.onload = function() {
-        if (this.status == 200) {
-            console.log('Server got:', this.response);
-        } else {
-            alert("response" + this.status);
+    var submitChoices = function(eventId) {
+        alert("submit");
+        var fd = new FormData();
+        fd.append("event_id", eventId);
+        var choicesInfo = {};
+        var choiceLabel = "A";
+        var nextChar = function(c) {
+            return String.fromCharCode(c.charCodeAt(0) + 1); 
         }
-    };
-    xhr.send(fd); 
-};
 
-$("document").ready(function() {
+        $(".choice-row-form").each(function() {
+            var file = $(this).find('input[type="file"]')[0].files[0]
+            var desc = $(this).find('input[type="text"]').val();
+            fd.append(choiceLabel, file);
+            choicesInfo[choiceLabel] = desc;
+            choiceLabel = nextChar(choiceLabel);
+        });
+
+        console.log(JSON.stringify(choicesInfo));
+        fd.append("choices_info", JSON.stringify(choicesInfo));
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../ajax/set_choice.php', true);
+        xhr.onload = function() {
+            if (this.status == 200) {
+                console.log('Server got:', this.response);
+            } else {
+                alert("response" + this.status);
+            }
+        };
+        xhr.send(fd); 
+    };
+
+    /*
+     * "manage" tab
+     */
     var edittingEventId = null;
 
     $("#more-option").click(function() {
@@ -60,7 +181,7 @@ $("document").ready(function() {
         $("#choice-list").append(defaultrow);
     });
 
-    voterEditor = {
+    var voterEditor = {
         elm : $("#voter-text"),
 
         setText: function(text) {
@@ -112,24 +233,6 @@ $("document").ready(function() {
         }
     }
 
-    var activate = function(eventId) {
-        $.ajax({
-            type: "POST",
-            url: "../ajax/activate.php",
-            dataType: "text",
-            data: {event_id: eventId},
-        })
-        .done(function(response) {
-            alert(response);
-            console.log(response);
-            loadEvents();
-        })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus );
-        });
-    };
-
     var showChoices = function() {
         if (!edittingEventId) {
             alert("getting result: EventId not set!");
@@ -154,9 +257,41 @@ $("document").ready(function() {
         });
     };
 
+    $("#voter-submit").click(function() {
+        var pattern = /^([a-z ]+),[ ]*([a-z_1-9]+@[a-z1-9.]+)$/i;
+
+        voters_info = $("#voter-text").val();
+        vdata = {};
+        vdata.event_id = edittingEventId;
+        vdata.voters = voters_info.split("\n").map(function(row) {
+            var res = pattern.exec(row);
+            if (!res) {
+                alert("incorrect voter info");
+                throw "incorrect voter info";
+            }
+            return { name: res[1], email: res[2] };
+        });
+        alert("Correct Voter format");
+        console.log(JSON.stringify(vdata));
+        $.ajax({
+            type: "POST",
+            url: "../ajax/set_voter.php",
+            data: JSON.stringify(vdata),
+            contentType: 'application/json; charset=utf-8',
+            success: function(data) {
+                    console.log(data);
+                    alert("submitted");
+            },
+            error: function ( jqXHR, textStatus ) {
+                    console.log( "Request failed: " + textStatus );
+            }
+        });
+    });
+
     $("#voter-export").click(function() {
         voterEditor.exportVoters();
     });
+
     $("#get-result").click(function() {
         if (!edittingEventId) {
             alert("getting result: EventId not set!");
@@ -213,140 +348,16 @@ $("document").ready(function() {
         });
     });
 
-    function enableEventSort() {
-        new Tablesort(document.getElementById('etable'));
-    }
-
-    enableEventSort();
-
-    function loadEvents() {
-        $.ajax({
-            method: "POST",
-            url: "../ajax/events.php",
-            dataType: "json"
-        })
-        .done(function(eventList) {
-            console.log(JSON.stringify(eventList));
-            var tbody = $("#etable tbody");
-            tbody.html("");
-            eventList.forEach(function(e) {
-                var newrow = ('<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td>' +
-                    '<td><button type="button" class="btn btn-default btn-sm voter-edit" data-eventid="{4}">' +
-                    '<span class="glyphicon glyphicon-edit" aria-hidden="true"></span>' +
-                    '</button></td>').format(
-                        e.title, e.description, e.start_time, e.end_time, e.event_id);
-                if (!parseInt(e.activated)) {
-                    newrow += '<td><button class="activate">Go</button></td>';
-                } else {
-                    newrow += "<td>Active</td>";
-                }
-                newrow += "</tr>";
-                newrowElm = $(newrow);
-                newrowElm.find(".activate").click(function() {
-                    activate(e.event_id);
-                });
-
-                tbody.append(newrowElm);
-
-                /*
-                 * when the edit button clicked, load voters and switch to voter
-                 * tab.
-                 * Previously it put this at the bottom of this file, and had a
-                 * weird bug: sometimes the clisk event is registerd, sometimes
-                 * not.  Guess what? I forget ajax is asynchronous. The button
-                 * still not exist sometimes.  Now I know why concurency program is
-                 * hard to develop  :-(
-                 */
-            });
-
-            $(".voter-edit").click(function() {
-                edittingEventId = $(this).attr("data-eventid");
-                voterEditor.loadVoters();
-                showChoices();
-                $("#event-manage-tab").removeClass('hidden');
-                $('.nav a[href="#manage"]').trigger("click");
-            });
-        })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus );
-        });
-    }
-    loadEvents();
-
-    $("#addEventForm").submit(function() {
-        alert("submit");
-        var epoch = function(datestr) {
-                var pattern = /([0-9]{2})\/([0-9]{2})\/([0-9]{4}) ([0-9]{1,2}):([0-9]{2}) (AM|PM)/;
-                var t = pattern.exec(datestr);
-                var hour = parseInt(t[4]);
-                if (t[6] == "PM") {
-                        hour += 12;
-                } else if (t[6] == "AM" && hour == 12) {
-                        hour = 0;
-                }
-                return new Date(parseInt(t[3]), parseInt(t[1])-1, parseInt(t[2]),
-                                hour, parseInt(t[5])).getTime() / 1000;
-        }
-
-        var formdata = {};
-        $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
-        formdata["start"] = epoch(formdata["start"]);
-        formdata["end"] = epoch(formdata["end"]);
-        alert(JSON.stringify(formdata));
-
-        $.ajax({
-            type: "POST",
-            url: "../ajax/add_event.php",
-            data: JSON.stringify(formdata),
-            contentType: 'application/json; charset=utf-8',
-            dataType: "text",
-            success: function(data) {
-                    console.log(data);
-                    submitChoices(parseInt(data));
-                    loadEvents();
-            },
-            error: function ( jqXHR, textStatus ) {
-                    console.log( "Request failed: " + textStatus );
-            }
-        });
-        return false;
-    });
-
-    $("#voter-submit").click(function() {
-        var pattern = /^([a-z ]+),[ ]*([a-z_1-9]+@[a-z1-9.]+)$/i;
-
-        voters_info = $("#voter-text").val();
-        vdata = {};
-        vdata.event_id = edittingEventId;
-        vdata.voters = voters_info.split("\n").map(function(row) {
-            var res = pattern.exec(row);
-            if (!res) {
-                alert("incorrect voter info");
-                throw "incorrect voter info";
-            }
-            return { name: res[1], email: res[2] };
-        });
-        alert("Correct Voter format");
-        console.log(JSON.stringify(vdata));
-        $.ajax({
-            type: "POST",
-            url: "../ajax/set_voter.php",
-            data: JSON.stringify(vdata),
-            contentType: 'application/json; charset=utf-8',
-            success: function(data) {
-                    console.log(data);
-                    alert("submitted");
-            },
-            error: function ( jqXHR, textStatus ) {
-                    console.log( "Request failed: " + textStatus );
-            }
-        });
-    });
-
     $("#voter-export").click(function() {
         voterEditor.exportVoters();
     });
+
+    /*
+     * initialization
+     */
+
+    enableEventSort();
+    loadEvents();
 
     var dropbox;
 
@@ -379,4 +390,8 @@ $("document").ready(function() {
                       "Drag and drop into the teatarea to import voters from file\n"
         alert(helpmsg);
     });
+
+    /*
+     * End Initializtion
+     */
 });
