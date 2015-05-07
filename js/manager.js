@@ -301,8 +301,8 @@ $("document").ready(function() {
                     console.log(data);
                     alert("submitted");
             },
-            error: function ( jqXHR, textStatus ) {
-                    console.log( "Request failed: " + textStatus );
+            error: function ( jqXHR, textStatus, err) {
+                    alert("Request failed: " + err);
             }
         });
     });
@@ -361,9 +361,8 @@ $("document").ready(function() {
             handlerMap = {1: type1Handler, 2: type2Handler};
             handlerMap[ret.event_type](ret.voter);
         })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus.responseText );
+        .fail(function(jqXHR, textStatus, err) {
+            alert(textStatus + " " + err);
         });
     });
 

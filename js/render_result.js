@@ -43,8 +43,7 @@ function renderResult(targetElmId, eventId, voterId, key) {
         });
         chart.render();
     })
-    .fail(function( jqXHR, textStatus ) {
-        alert(textStatus);
-        console.log( "Request failed: " + textStatus );
+    .fail(function(jqXHR, textStatus, err) {
+        alert(textStatus + " " + err);
     });
 }
