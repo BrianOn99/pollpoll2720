@@ -32,13 +32,18 @@ function rand_string($length = 10) {
 }
 
 foreach ($choices_info as $label => $desc) {
-        $tmp = $_FILES[$label]["tmp_name"];
-        $name = rand_string();
-        $img_dest = "$upload_dir/$name";
-        move_uploaded_file($tmp, $img_dest);
+        $tmp = @$_FILES[$label]["tmp_name"];
+        if ($tmp) {
+                $name = rand_string();
+                $img_dest = "$upload_dir/$name";
+                move_uploaded_file($tmp, $img_dest);
+                $local_img_dest = "$img_dir/$name";
+        } else {
+                $local_img_dest = NULL;
+        }
         
         echo "$label $desc $img_dest\n";
-        $evt->add_option($label, htmlspecialchars($desc), "$img_dir/$name");
+        $evt->add_option($label, htmlspecialchars($desc), $local_img_dest);
 }
 
 ?> 
