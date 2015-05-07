@@ -14,11 +14,11 @@ $user = new User(User::name2id($_SESSION["user_name"]));
 $data = json_decode($_REQUEST["metadata"], true);  
 
 $evt = $user->create_event(array(
-        "title" => $data["title"],
-        "description" => $data["desc"],
-        "event_type" =>  $data["type"],
-        "start_time" => $data["start"],
-        "end_time" =>  $data["end"]));
+        "title" => htmlspecialchars($data["title"]),
+        "description" => htmlspecialchars($data["desc"]),
+        "event_type" =>  htmlspecialchars($data["type"]),
+        "start_time" => htmlspecialchars($data["start"]),
+        "end_time" =>  htmlspecialchars($data["end"])));
 
 /* event is created, now add choices */
 
@@ -38,7 +38,7 @@ foreach ($choices_info as $label => $desc) {
         move_uploaded_file($tmp, $img_dest);
         
         echo "$label $desc $img_dest\n";
-        $evt->add_option($label, $desc, "$img_dir/$name");
+        $evt->add_option($label, htmlspecialchars($desc), "$img_dir/$name");
 }
 
 ?> 
