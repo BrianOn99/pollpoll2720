@@ -38,9 +38,8 @@ $("document").ready(function() {
             console.log(response);
             loadEvents();
         })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus );
+        .fail(function(jqXHR, textStatus, err) {
+            alert("Request failed: " + err);
         });
     };
 
@@ -51,7 +50,6 @@ $("document").ready(function() {
             dataType: "json"
         })
         .done(function(eventList) {
-            console.log(JSON.stringify(eventList));
             var tbody = $("#etable tbody");
             tbody.html("");
             eventList.forEach(function(e) {
@@ -91,9 +89,8 @@ $("document").ready(function() {
                 tbody.append(newrowElm);
             });
         })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus );
+        .fail(function(jqXHR, textStatus, err) {
+            alert("Request failed: " + err);
         });
     }
 
@@ -105,36 +102,7 @@ $("document").ready(function() {
      * "add" tab
      */
 
-    /*
-    $("#addEventForm").submit(function() {
-        alert("submit");
-        var formdata = {};
-        $("#addEventForm").serializeArray().map(function(x){formdata[x.name] = x.value;});
-        formdata["start"] = epoch(formdata["start"]);
-        formdata["end"] = epoch(formdata["end"]);
-        alert(JSON.stringify(formdata));
-
-        $.ajax({
-            type: "POST",
-            url: "../ajax/add_event.php",
-            data: JSON.stringify(formdata),
-            contentType: 'application/json; charset=utf-8',
-            dataType: "text",
-            success: function(data) {
-                    console.log(data);
-                    submitChoices(parseInt(data));
-                    loadEvents();
-            },
-            error: function ( jqXHR, textStatus ) {
-                    console.log( "Request failed: " + textStatus );
-            }
-        });
-        return false;
-    });
-    */
-
     var collectMetaData = function() {
-        alert("collecting question");
         var formdata = {};
         $("#addEventForm").serializeArray().forEach(function(x){
             if (x.name != "choice-desc") {
@@ -144,12 +112,10 @@ $("document").ready(function() {
         formdata["start"] = epoch(formdata["start"]);
         formdata["end"] = epoch(formdata["end"]);
         
-        alert(JSON.stringify(formdata));
         return formdata;
     };
 
     $("#addEventForm").submit(function() {
-        alert("submit");
         var fd = new FormData();
         fd.append("metadata", JSON.stringify(collectMetaData()));
         var choicesInfo = {};
@@ -173,7 +139,7 @@ $("document").ready(function() {
         xhr.open('POST', '../ajax/add_event.php', true);
         xhr.onload = function() {
             if (this.status == 200) {
-                console.log('Server got:'+ this.response);
+                alert("submitted");
             } else {
                 alert("Error submit:" + this.status);
             }
@@ -223,15 +189,13 @@ $("document").ready(function() {
             })
             .done(function(voterList) {
                 displayText = "";
-                alert(JSON.stringify(voterList));
                 for (var voter of voterList) {
                     displayText += "{0}, {1}\n".format(voter.name, voter.email);
                 }
                 textEditor.setText(displayText);
             })
-            .fail(function( jqXHR, textStatus ) {
-                alert(textStatus);
-                console.log( "Request failed: " + textStatus );
+            .fail(function(jqXHR, textStatus, err) {
+                alert("Request failed: " + err);
             });
         },
 
@@ -243,7 +207,6 @@ $("document").ready(function() {
         importVoters: function(file) {
             textEditor = this;  /* closure variable */
             var reader = new FileReader();
-            alert(file.size);
             reader.onload = function(e) {
                 var content = e.target.result;
                 textEditor.setText(content);
@@ -270,9 +233,8 @@ $("document").ready(function() {
             });
             $("#choices-label").html(output);
         })
-        .fail(function( jqXHR, textStatus ) {
-            alert(textStatus);
-            console.log( "Request failed: " + textStatus );
+        .fail(function(jqXHR, textStatus, err) {
+            alert("Request failed: " + err);
         });
     };
 
@@ -290,7 +252,6 @@ $("document").ready(function() {
             }
             return { name: res[1], email: res[2] };
         });
-        alert("Correct Voter format");
         console.log(JSON.stringify(vdata));
         $.ajax({
             type: "POST",
@@ -301,7 +262,7 @@ $("document").ready(function() {
                     console.log(data);
                     alert("submitted");
             },
-            error: function ( jqXHR, textStatus, err) {
+            error: function (jqXHR, textStatus, err) {
                     alert("Request failed: " + err);
             }
         });
@@ -333,8 +294,6 @@ $("document").ready(function() {
             data: {event_id: edittingEventId}
         })
         .done(function(ret) {
-            alert(JSON.stringify(ret));
-
             var tbody = $("#result-table > tbody");
             var theadVoterDesc = $("#voter-desc");
             tbody.html("");
@@ -395,7 +354,6 @@ $("document").ready(function() {
 
     $("#voter-text").on("drop", function(e) {
         var f = e.originalEvent.dataTransfer.files[0];
-        alert(f.name + " dropped");
         if (f){
             voterEditor.importVoters(f);
         }
