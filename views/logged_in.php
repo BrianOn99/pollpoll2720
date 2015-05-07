@@ -56,7 +56,7 @@
           <div class="col-sm-10">
             <select id="event-type" class="form-control" name="type" required />
               <option>1</option>
-              <option>1</option>
+              <option>2</option>
             </select>
           </div>
         </div>
